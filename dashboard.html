@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <header class="header ">
+    <h1 class="header-logo">HMS</h1>
+  </header>
+  <sidebar class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="dashboard.html">Dashboard</a></li>
+
+      <li>
+        <button class="dropdown-btn department-drop-down-menu">Department
+        <!-- <i class="fa fa-caret-down"></i> -->
+        </button>
+        <div class="dropdown-container">
+          <ul>
+            <li><a class="department-name" href="Department/Emergency.html">Emergency</a></li> 
+          <li><a class="department-name" href="Department/Surgery.html">Surgery</a></li>
+          <li><a class="department-name" href="Department/ICU.html">ICU</a></li>
+          <li><a class="department-name" href="Department/ENT.html">ENT</a></li>
+          <li><a class="department-name" href="Department/Neurology.html">Neurology</a></li>
+          <li><a class="department-name" href="Department/Oncology.html">Oncology</a></li>
+          <li><a class="department-name" href="Department/Gynaecology.html">Gynaecology</a></li>
+          <li><a class="department-name" href="Department/Pediatrics.html">Pediatrics</a></li>
+          <li><a class="department-name" href="Department/Psychiatry.html">Psychiatry</a></li>
+          <li><a class="department-name" href="Department/Orthopaedic.html">Orthopaedic</a></li>
+          </ul> 
+        </div>
+      </li>
+
+      <li><a href="">Patients</a></li>
+      <li><a href="">Lab Reports</a></li>
+      <li><a href="">Room</a></li>
+      <li><a href="">Billing</a></li>
+    </ul>
+  </sidebar>
+
+  <section class="overview margin-left margin-right margin-top">
+    <div class="overview-list ">
+      <h3>Total Patients</h3>
+      <h2>200</h2>
+    </div>
+    <div class="overview-list ">
+      <h3>Total Doctors</h3>
+      <h2>189</h2>
+    </div>
+    <div class="overview-list ">
+      <h3>Lab Reports</h3>
+      <h2>300</h2>
+    </div>
+  
+  </section>
+
+  <script src="assets/DoctorData.js"></script>
+  <script src="script.js"></script>
+  
+</body>
+</html>
