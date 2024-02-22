@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="header ">
+    <h1 class="header-logo">HMS</h1>
+  </header>
+
+  <sidebar class="sidebar"></sidebar>
+
+  <div class="patient-first-sec title margin-left margin-right margin-top"></div>
+
+  <div class="patient-list margin-left margin-right">
+    <table class="patient-table"></table> 
+  </div>
+
+  
+  <script src="../assets/PatientsData.js"></script>
+  <script src="patient.js"></script>
+  <script src="../script.js"></script>
+
+</body>
+<script>
+  
+  let patient_sec = 'INPATIENT';
+  let c = displayInpatientList(Inpatient);
+  displayPatientFirstSection(patient_sec);
+</script>
+
+</html>

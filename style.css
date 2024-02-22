@@ -163,7 +163,7 @@ p,h1,h2,h3,h4,h5,h6{
   color: black;
 }
 
-.department-list{
+.department-list, .patient-list{
   background-color: white;
   padding: 14px;
   border-radius: 7px;
@@ -171,27 +171,32 @@ p,h1,h2,h3,h4,h5,h6{
 }
 
 
- .department-list > table, th,td{
+ .department-list > table, th,td, .patient-list > table, th,td{
    /* border: 1px solid black;  */
   border-collapse: collapse;
   
 } 
 
-.department-table{
+.department-table, .patient-table, .outpatient-table{
   width: 100%;
 }
- .department-table > :nth-child(even){
-  background-color: rgb(204, 201, 201);
+ .department-table > :nth-child(even), .patient-table > :nth-child(even), .outpatient-table > :nth-child(even){
+  background-color: rgb(198, 197, 197);
+  color: rgb(94, 92, 92);
   
 }
 th{
   text-align: start;
+  color:rgb(47, 43, 43);
 }
 th,td{
   padding: 12px;
   
-  
 }
+
+/* td{
+  color: rgb(94, 92, 92);
+} */
 
 .dept-sub-container {
   display: flex;
@@ -212,7 +217,7 @@ th,td{
   outline: none;
 }
 
-.add-doctor {
+.add-doctor, .add-patient{
   color: white;
   background-color: rgb(0, 0, 0);
   border: none;
@@ -223,7 +228,7 @@ th,td{
   cursor: pointer;
 }
 
-.delete-doctor {
+.delete-doctor,.remove-patient {
   color: white;
   background-color: rgb(231, 194, 72);
   border: none;

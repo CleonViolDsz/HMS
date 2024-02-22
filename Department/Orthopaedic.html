@@ -12,37 +12,7 @@
   <header class="header ">
     <h1 class="header-logo">HMS</h1>
   </header>
-  <sidebar class="sidebar">
-    <ul class="sidebar-menu">
-      <li><a href="../dashboard.html">Dashboard</a></li>
-
-      <li>
-        <button class="dropdown-btn department-drop-down-menu">Department
-        <!-- <i class="fa fa-caret-down"></i> -->
-        </button>
-        <div class="dropdown-container">
-          <ul>
-           <li><a class="department-name"  href="Emergency.html">Emergency</a></li> 
-          <li><a class="department-name" href="Surgery.html">Surgery</a></li>
-          <li><a class="department-name" href="ICU.html">ICU</a></li>
-          <li><a class="department-name" href="ENT.html">ENT</a></li>
-          <li><a class="department-name" href="Neurology.html">Neurology</a></li>
-          <li><a class="department-name" href="Oncology.html">Oncology</a></li>
-          <li><a class="department-name" href="Gynaecology.html">Gynaecology</a></li>
-          <li><a class="department-name" href="Pediatrics.html">Pediatrics</a></li>
-          <li><a class="department-name" href="Psychiatry.html">Psychiatry</a></li>
-          <li><a class="department-name" href="Orthopaedic.html">Orthopaedic</a></li>
-          </ul>
-          
-        </div>
-      </li>
-
-      <li><a href="">Patients</a></li>
-      <li><a href="">Lab Reports</a></li>
-      <li><a href="">Room</a></li>
-      <li><a href="">Billing</a></li>
-    </ul>
-  </sidebar>
+  <sidebar class="sidebar"></sidebar>
 
   <div class="dept-first-sec title margin-left margin-right margin-top"></div>
 
@@ -54,6 +24,8 @@
   <div class="delete-doc-overlay"></div>
 
   <script src="../assets/DoctorData.js"></script> 
+  <script src="department.js"></script>
+
 <script src="../script.js"></script>
 
 </body>
@@ -61,7 +33,7 @@
 <script>
   let k = displayDoctorList(Orthopaedic);
   let dept = Orthopaedic;
-  let deptName = 'Orthopaedic';
+  let deptName = 'ORTHOPAEDIC';
   let deptId = 10;
 
   displayDeptFirstSection(deptName);

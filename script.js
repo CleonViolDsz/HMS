@@ -21,7 +21,7 @@ for (i = 0; i < dropdown.length; i++) {
 
 function displayDeptFirstSection(deptName){
   document.querySelector('.dept-first-sec').innerHTML = `
-  <h1>${deptName} Department</h1>
+  <h1>${deptName} DEPARTMENT</h1>
     <div class="dept-sub-container">
       <input class="search-bar" type="text" placeholder="Search">
       <div>
