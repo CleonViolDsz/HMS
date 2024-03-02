@@ -163,7 +163,7 @@ p,h1,h2,h3,h4,h5,h6{
   color: black;
 }
 
-.department-list, .patient-list{
+.department-list, .patient-list, .lab-report-list, .billing-list, .room-list{
   background-color: white;
   padding: 14px;
   border-radius: 7px;
@@ -171,16 +171,16 @@ p,h1,h2,h3,h4,h5,h6{
 }
 
 
- .department-list > table, th,td, .patient-list > table, th,td{
+ .department-list > table, th,td, .patient-list > table, th,td, .lab-report-list > table, th,td, .billing-list > table, th,td, .room-list > table,th,td{
    /* border: 1px solid black;  */
   border-collapse: collapse;
   
 } 
 
-.department-table, .patient-table, .outpatient-table{
+.department-table, .patient-table, .outpatient-table, .lab-report-table, .billing-table, .room-table{
   width: 100%;
 }
- .department-table > :nth-child(even), .patient-table > :nth-child(even), .outpatient-table > :nth-child(even){
+ .department-table > :nth-child(even), .patient-table > :nth-child(even), .outpatient-table > :nth-child(even),.lab-report-table > :nth-child(even), .billing-table > :nth-child(even), .room-table > :nth-child(even){
   background-color: rgb(198, 197, 197);
   color: rgb(94, 92, 92);
   
@@ -217,7 +217,7 @@ th,td{
   outline: none;
 }
 
-.add-doctor, .add-patient{
+.add-doctor, .add-patient,.add-report,.add-bill, .assign-room{
   color: white;
   background-color: rgb(0, 0, 0);
   border: none;
@@ -228,7 +228,7 @@ th,td{
   cursor: pointer;
 }
 
-.delete-doctor,.remove-patient {
+.edit-doctor,.edit-patient ,.edit-report,.edit-bill, .vacate-room{
   color: white;
   background-color: rgb(231, 194, 72);
   border: none;
@@ -254,7 +254,7 @@ th,td{
   
 }
 
-.delete-doc-overlay{
+.assign-room-overlay{
   position: fixed;
   left: 0;
   right: 0;
@@ -268,37 +268,141 @@ th,td{
   
 }
 
-.add-title{
+.add-inpatient-overlay, .add-outpatient-overlay, .add-lab-report-overlay, .add-bill-overlay{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  visibility: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   background-color: rgba(0,0,0,0.45); 
+   
+}
+
+.edit-lab-report-overlay,.edit-bill-overlay ,.edit-bill-overlay-1, .edit-lab-report-overlay-1, .edit-inpatient-overlay,.edit-inpatient-overlay-1,.edit-outpatient-overlay, .edit-outpatient-overlay-1, .edit-doc-overlay, .edit-doc-overlay-1{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  visibility: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   background-color: rgba(240, 240, 240, 0.7); 
+} 
+
+.vacate-room-overlay{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  visibility: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   background-color: rgba(240, 240, 240, 0.7); 
+} 
+
+
+
+.add-title, .edit-title{
   font-size: 26px;
   text-align: center;
   font-weight: 600;
 }
-.add-doc-dropdown-box,.delete-doc-dropdown-box{
+.add-doc-dropdown-box,.delete-doc-dropdown-box, .add-report-dropdown-box,.add-bill-dropdown-box{
   background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2.5%;
+  padding: 2%;
   width: 500px;
   border-radius: 6px;
   box-shadow: 10px 10px 5px rgba(0,0,0,0.25);
 }
 
-.add-doc-dropdown-box p,.delete-doc-dropdown-box p{
+.edit-bill-first-dropdown, .edit-bill-second-dropdown, .edit-lab-report-first-dropdown, .edit-lab-report-second-dropdown, .edit-patient-first-dropdown,.edit-doc-first-dropdown, .edit-doc-second-dropdown, .assign-room-dropdown-box, .vacate-room-dropdown-box{
+  background-color: white;
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 6px;
+  box-shadow: 10px 10px 5px rgba(0,0,0,0.25);
+  width: 390px;
+}
+
+
+
+.add-doc-dropdown-box p,.delete-doc-dropdown-box p, .add-report-dropdown-box p, .add-bill-dropdown-box p,.edit-bill-first-dropdown p, .edit-bill-second-dropdown p, .edit-lab-report-first-dropdown p, .edit-lab-report-second-dropdown p, .edit-patient-first-dropdown p, .edit-patient-second-dropdown p, .edit-doc-first-dropdown p,.edit-doc-second-dropdown p, .assign-room-dropdown-box p, .vacate-room-dropdown-box p{
   font-size: 18px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-.add-doc-dropdown-box input, textarea, select ,.delete-doc-dropdown-box input{
+.add-doc-dropdown-box input, textarea, select ,.delete-doc-dropdown-box input, .add-report-dropdown-box input,select, .add-bill-dropdown-box input,select,.edit-bill-first-dropdown input, .edit-bill-second-dropdown input,select, .edit-lab-report-first-dropdown input, .edit-lab-report-second-dropdown input, .edit-patient-first-dropdown input, .edit-patient-second-dropdown input{
   padding: 8px;
   border-radius: 6px;
   border: 1px solid rgb(164, 156, 156);
   font-size: 16px;
   
 }
+.edit-doc-first-dropdown input, .edit-doc-second-dropdown input, .assign-room-dropdown-box input,.vacate-room-dropdown-box input
+{
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid rgb(164, 156, 156);
+  font-size: 16px;
+}
+
+.add-inpatient-dropdown-box, .add-outpatient-dropdown-box,.edit-patient-second-dropdown{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+  border-radius: 6px;
+  box-shadow: 10px 10px 5px rgba(0,0,0,0.25);
+  
+}
+
+.patient-detail-ctn{
+  display: flex;
+  
+}
 
 
+.patient-detail{
+  display: flex; 
+  justify-content: top;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.patient-detail input{
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid rgb(164, 156, 156);
+  font-size: 16px;
+  width: 300px
+  
+}
+
+
+.patient-detail select{
+  width: 317.6px;
+  padding: 8px;
+}
+
+.patient-detail p{
+  font-size: 16px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
 
 textarea{
   resize: none;
@@ -309,17 +413,33 @@ textarea{
   margin-top: 20px;
 }
 
-.add-doc-btn {
-  font-size: 15px;
+.add-doc-btn, .add-patient-btn,.add-report-btn,.add-bill-btn,.assign-room-btn {
+  font-size: 16px;
   border: none;
   background-color: black;
   color: white;
   font-weight: 550px;
   padding: 8px 15px;
-  width:100px;
-  border-radius: 20px;
+  width:140px;
+  border-radius: 10px;
   cursor: pointer;
 }
+
+.edit-bill-first-btn, .edit-bill-btn,.edit-report-first-btn,.edit-report-btn, .edit-patient-first-btn,.edit-patient-btn, .edit-doc-first-btn, .edit-doc-btn, .vacate-room-btn{
+  font-size: 16px;
+  border: none;
+  background-color: rgb(231, 194, 72);
+  color: white;
+  font-weight: bold;
+  padding: 8px 15px;
+  width:140px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+
+
 
 .delete-doc-btn{
   font-size: 15px;
@@ -332,7 +452,7 @@ textarea{
   cursor: pointer;
 }
 
-.invalid-doctor{
+.invalid-doctor, .invalid-id, .invalid-room-id{
   text-align: center;
   color: red;
   padding: 4px;

@@ -34,11 +34,68 @@ document.querySelector('.sidebar').innerHTML =
           </ul>
           
         </div></li>
-      <li><a href="">Lab Reports</a></li>
-      <li><a href="">Room</a></li>
-      <li><a href="">Billing</a></li>
+      <li><a href="../Lab Report/Lab_Report.html">Lab Reports</a></li>
+      <li><a href="../Room/Room.html">Room</a></li>
+      <li><a href="../Billing/Billing.html">Billing</a></li>
     </ul>
 `
+
+//add patient page content
+document.querySelector('.add-inpatient-overlay').innerHTML = 
+`
+<div  class="add-inpatient-dropdown-box">
+     <p class="add-title">ADD PATIENT</p>
+     <div class="patient-detail-ctn">
+     <div class="patient-detail" >
+       <div>
+         <p >Full Name:</p>
+         <input type="text" class="patient-name">
+       </div>
+       <div>
+         <p >Age:</p>
+         <input type="text" class="patient-age">
+       </div>
+       <div>
+         <p >Contact No.:</p>
+         <input type="text" class="patient-phone">
+       </div>
+       
+       <div>
+         <p>Date of Admission:</p>
+         <input type="date" class="DOA">
+       </div>
+       </div>
+       <div class="patient-detail">
+       <div>
+         <p >Gender:</p>
+         <select  name="patient-sex" id="" class="patient-sex">
+           <option value="">Select</option>
+           <option value="Male">Male</option>
+           <option value="Female">Female</option>
+         </select>
+       </div>
+       <div>
+         <p >Disease:</p>
+         <input type="text" class="patient-disease">
+       </div>
+       <div>
+         <p >Doctor ID:</p>
+         <input type="text" class="patient-doc">
+       </div>
+       <div>
+         <p >Date of Discharge:</p>
+         <input type="date" class="DOD">
+       </div>
+       
+       </div>
+     </div>
+     
+     <div class="btn-ctn">
+       <button class="add-patient-btn add-inpatient-btn">Save & Submit</button>
+     </div>
+ </div>
+`;
+
 
 function displayPatientFirstSection(patient_sec){
   document.querySelector('.patient-first-sec').innerHTML = `
@@ -46,19 +103,21 @@ function displayPatientFirstSection(patient_sec){
     <div class="dept-sub-container">
       <input class="search-bar" type="text" placeholder="Search">
       <div>
-        <button class="add-patient" onclick="">Add Patient</button>
-        <button class="remove-patient">Remove Patient</button>
+        <button class="add-patient">Add Patient</button>
+        <button class="edit-patient">Edit Patient</button>
       </div>
     </div>
   `
 }
+
+
 
 function displayInpatientList(Patient) {
 
   const patientList = document.querySelector('.patient-table');
   patientList.innerHTML = `
   <tr>
-    <th>Patient Id</th>
+    <th>Patient ID</th>
     <th>Name</th>
     <th>Age</th>
     <th>Phone</th>
@@ -67,6 +126,7 @@ function displayInpatientList(Patient) {
     <th>Doctor Id</th>
     <th>Date of Admission</th>
     <th>Date of Discharge</th>
+    
   </tr>`
 
   let j = 0;
@@ -83,6 +143,7 @@ function displayInpatientList(Patient) {
     <td>${data.DoctorId}</td>
     <td>${data.DOAdmin}</td>
     <td>${data.DODischarge}</td>
+    
     </tr>
     `
     j++;
@@ -129,3 +190,106 @@ function displayOutPatientList(Patient){
   return j;
 
 }
+
+//toggle add patient overlay
+function toggleAddPatientOverlay(class_name){
+  console.log(class_name);
+  let element = document.querySelector(`.${class_name}`);
+  if(element.style.visibility === 'hidden'){
+    element.style.visibility = 'visible';
+  }
+  else{
+    element.style.visibility = 'hidden';
+  }
+}
+
+function toggleEditPatientOverlay(class_name){
+  let element = document.querySelector(`.${class_name}`);
+  if(element.style.visibility === 'hidden'){
+    element.style.visibility = 'visible';
+  }
+  else{
+    element.style.visibility = 'hidden';
+  }
+}
+
+// Add Inpatient
+function addInpatient(n,patient_sec,overlay_class,patientPrefix){
+  document.querySelector('.add-inpatient-btn').addEventListener('click',()=>{
+    let Name = document.querySelector('.patient-name').value;
+    let Age = document.querySelector('.patient-age').value;
+    let Phone = document.querySelector('.patient-phone').value;
+    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
+    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
+    let Disease = document.querySelector('.patient-disease').value;
+    let DoctorId = document.querySelector('.patient-doc').value;
+    let DOAdmin = document.querySelector('.DOA').value;
+    let DODischarge = document.querySelector('.DOD').value;
+    n = ++n;
+    let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
+    PatientId = `${patientPrefix}${id}`;
+    if(DODischarge == ""){
+      DODischarge = "--";
+    }
+
+    let newPatient = new createInpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,DOAdmin,DODischarge);
+    patient_sec.push(newPatient);
+    displayInpatientList(patient_sec);
+    toggleAddPatientOverlay(overlay_class);
+  });
+}
+
+//add outpatient
+
+function addOutpatient(n,patient_sec,overlay_class,patientPrefix){
+  document.querySelector('.add-outpatient-btn').addEventListener('click',()=>{
+    let Name = document.querySelector('.patient-name').value;
+    let Age = document.querySelector('.patient-age').value;
+    let Phone = document.querySelector('.patient-phone').value;
+    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
+    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
+    let Disease = document.querySelector('.patient-disease').value;
+    let DoctorId = document.querySelector('.patient-doc').value;
+    let Date = document.querySelector('.date').value;
+    n = ++n;
+    let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
+    PatientId = `${patientPrefix}${id}`;
+
+    let newPatient = new createOutpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,Date);
+    patient_sec.push(newPatient);
+    displayOutPatientList(patient_sec);
+    toggleAddPatientOverlay(overlay_class);
+  })
+}
+
+
+
+//create inpatient
+ function createInpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,DOAdmin,DODischarge){
+  this.PatientId = PatientId;
+  this.Name = Name;
+  this.Age = Age;
+  this.Phone = Phone;
+  this.Sex = Sex;
+  this.Disease = Disease;
+  this.DoctorId = DoctorId,
+  this.DOAdmin = DOAdmin,
+  this.DODischarge = DODischarge
+ }
+
+ //create outpatient
+ function createOutpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,Date){
+  this.PatientId = PatientId;
+  this.Name = Name;
+  this.Age = Age;
+  this.Phone = Phone;
+  this.Sex = Sex;
+  this.Disease = Disease;
+  this.DoctorId = DoctorId,
+  this.Date = Date;
+ }
+
+ 
+
+
+

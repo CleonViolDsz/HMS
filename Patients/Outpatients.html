@@ -19,6 +19,117 @@
     <table class="outpatient-table"></table> 
   </div>
 
+  <div class="add-outpatient-overlay">
+    <div class="add-outpatient-dropdown-box">
+      <p class="add-title">ADD PATIENT</p>
+      <div class="patient-detail-ctn">
+      <div class="patient-detail">
+        <div>
+          <p >Full Name:</p>
+          <input type="text" class="patient-name">
+        </div>
+        <div>
+          <p >Age:</p>
+          <input type="text" class="patient-age">
+        </div>
+        <div>
+          <p >Contact No.:</p>
+          <input type="text" class="patient-phone">
+        </div>
+
+        <div>
+          <p>Date:</p>
+          <input type="date" class="date">
+        </div>
+      </div>
+
+      <div class="patient-detail">
+        <div>
+          <p >Gender:</p>
+          <select  name="patient-sex" id="" class="patient-sex">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div>
+          <p >Disease:</p>
+          <input type="text" class="patient-disease">
+        </div>
+        <div>
+          <p >Doctor ID:</p>
+          <input type="text" class="patient-doc">
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-ctn">
+      <button class="add-patient-btn add-outpatient-btn">Save & Submit</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="edit-outpatient-overlay">
+    <div class="edit-patient-first-dropdown">
+      <p class="edit-title">EDIT INPATIENT</p>
+      <P>Enter Patient ID:</P>
+      <input type="text" class="edit_outpatientId">
+      <div class="btn-ctn">
+        <button class="edit-outpatient-first-btn edit-patient-first-btn">Enter</button>
+      </div>
+      <p class="invalid-id"></p>
+    </div>
+  </div>
+
+  <div class="edit-outpatient-overlay-1">
+    <div class="edit-patient-second-dropdown">
+      <p class="edit-title">EDIT PATIENT</p>
+      <div class="patient-detail-ctn">
+        <div class="patient-detail">
+          <div>
+            <p >Full Name:</p>
+            <input type="text" class="edit-outpatient-name">
+          </div>
+          <div>
+            <p >Age:</p>
+            <input type="text" class="edit-outpatient-age">
+          </div>
+          <div>
+            <p >Contact No.:</p>
+            <input type="text" class="edit-outpatient-phone">
+          </div>
+  
+          <div>
+            <p>Date:</p>
+            <input type="date" class="edit-date">
+          </div>
+        </div>
+  
+        <div class="patient-detail">
+          <div>
+            <p >Gender:</p>
+            <select  name="patient-sex" id="" class="edit-outpatient-sex">
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div>
+            <p >Disease:</p>
+            <input type="text" class="edit-outpatient-disease">
+          </div>
+          <div>
+            <p >Doctor ID:</p>
+            <input type="text" class="edit-outpatient-doc">
+          </div>
+        </div>
+      </div>
+      <div class="btn-ctn">
+        <button class="edit-patient-btn edit-outpatient-btn">Save</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/PatientsData.js"></script>
   <script src="patient.js"></script>
   <script src="../script.js"></script>
@@ -29,5 +140,66 @@
   let patient_sec = 'OUTPATIENT';
   let c = displayOutPatientList(Outpatient);
   displayPatientFirstSection(patient_sec);
+  addOutpatient(c,Outpatient,'add-outpatient-overlay','OUTP');
+
+  document.querySelector('.add-patient').addEventListener('click',()=>{
+    toggleAddPatientOverlay('add-outpatient-overlay');
+  })
+
+  document.querySelector('.edit-patient').addEventListener('click',()=>{
+    toggleEditPatientOverlay('edit-outpatient-overlay');
+  })
+
+
+  let outPatient_id = 0;
+document.querySelector('.edit-outpatient-first-btn').addEventListener('click',()=>{
+  let count = 0;
+  outPatient_id = document.querySelector('.edit_outpatientId').value;
+  
+  Outpatient.forEach(data=>{
+    if(data.PatientId == outPatient_id){
+      count++;
+      document.querySelector('.edit-outpatient-name').value = data.Name;
+      document.querySelector('.edit-outpatient-age').value = data.Age;
+      document.querySelector('.edit-outpatient-phone').value = data.Phone;
+      document.querySelector('.edit-outpatient-disease').value = data.Disease;
+      document.querySelector('.edit-outpatient-doc').value = data.DoctorId;
+      document.querySelector('.edit-date').value = data.Date;
+    }
+  });
+  if(count == 1){
+    document.querySelector('.invalid-id').innerHTML = "";
+    toggleEditPatientOverlay('edit-outpatient-overlay-1');
+  }
+  else{
+    document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
+  }
+});
+
+document.querySelector('.edit-outpatient-btn').addEventListener('click',()=>{
+  let Name = document.querySelector('.edit-outpatient-name').value;
+  let Age = document.querySelector('.edit-outpatient-age').value;
+  let Phone = document.querySelector('.edit-outpatient-phone').value;
+  let Disease = document.querySelector('.edit-outpatient-disease').value;
+  let DoctorId = document.querySelector('.edit-outpatient-doc').value;
+  let Date = document.querySelector('.edit-date').value;
+  let sexIndex = document.querySelector('.edit-outpatient-sex').selectedIndex;
+  let Sex = document.querySelector('.edit-outpatient-sex')[sexIndex].value;
+
+  Outpatient.forEach(data=>{
+    if(data.PatientId == outPatient_id){
+      data.Name = Name;
+      data.Age = Age;
+      data.Sex = Sex;
+      data.Phone = Phone;
+      data.Disease = Disease;
+      data.DoctorId = DoctorId;
+      data.Date = Date;
+      displayOutPatientList(Outpatient);
+      toggleEditPatientOverlay('edit-outpatient-overlay-1');
+      toggleEditPatientOverlay('edit-outpatient-overlay');
+    }
+  });
+});
 </script>
 </html>

@@ -1,176 +1,175 @@
 const Emergency = [
   
     {
-      doctorId: 1,
+      doctorId: 'EMG001',
       Name: "John Doe",
       deptId: 1,
       Age: "50",
       Phone: "122445657",
-      Sex: "Male"
+      emailId: 'john@doe.com',
+      Sex: "Male",
+      Salary: 40000,
+      Employment_Status: "Active"
     },
     {
-      doctorId: 2,
+      doctorId: 'EMG002',
       Name: "Jennifer lewis",
       deptId: 1,
       Age: "45",
       Phone: "122445657",
-      Sex: "Female"
+      emailId: 'jennifer@lewis.com',
+      Sex: "Female",
+      Salary: 45000,
+      Employment_Status: "Active"
     },
   
   
     {
-    doctorId: 3,
+    doctorId: 'EMG003',
     Name: "sushmitha loknath",
     deptId: 1,
     Age: "60",
     Phone: "122445657",
-    Sex: "Female"
-  },
-  {
-  doctorId: 4,
-  Name: "Chris Brown",
-  deptId: 1,
-  Age: "35",
-  Phone: "122445657",
-  Sex: "Male"
+    emailId: 'sushmitha@loknath.com',
+    Sex: "Female",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   
-  
-  {
-  doctorId: 5,
-  Name: "Taylor Swift",
-  deptId: 1,
-  Age: "40",
-  Phone: "122445657",
-  Sex: "Female"
-  },
-  {
-  doctorId: 6,
-  Name: "Selena Gomez",
-  deptId: 1,
-  Age: "36",
-  Phone: "122445657",
-  Sex: "Female"
-  },
-  
-  {
-    doctorId: 7,
-    Name: "Drake",
-    deptId: 1,
-    Age: "41",
-    Phone: "122445657",
-    Sex: "Male"
-    },
-    
-    {
-      doctorId: 8,
-      Name: "Charlie Puth",
-      deptId: 1,
-      Age: "39",
-      Phone: "122445657",
-      Sex: "Male"
-      },
   ]
 
 
 const Surgery = [
   {
-    doctorId: 1,
+    doctorId: 'SUR001',
     Name: "Michelle obama",
     deptId: 2,
     Age: "39",
     Phone: "122445657",
-    Sex: "Female"
+    emailId: 'michelle@obama.com',
+    Sex: "Female",
+    Salary: 50000,
+    Employment_Status: "Active"
     },
 
     {
-      doctorId: 2,
+      doctorId: 'SUR002',
       Name: "Peter Griffin",
       deptId: 2,
       Age: "40",
       Phone: "122445657",
-      Sex: "Male"
+      emailId: 'peter@griffin.com',
+      Sex: "Male",
+      Salary: 60000,
+      Employment_Status: "Active"
       },
 ]
 
 const ICU = [
   {
-    doctorId: 1,
+    doctorId: 'ICU001',
     Name: 'Meagan Janice',
     deptId: 3,
     Age: 40,
     Phone: "122445657",
-    Sex: "Female"
+    emailId: 'meagan@janice.com',
+    Sex: "Female",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   {
-    doctorId: 2,
-    Name: 'Silvia',
+    doctorId: 'ICU002',
+    Name: 'Silvia Griffin',
     deptId: 3,
     Age: 49,
     Phone: "122445657",
-    Sex: "Female"
+    emailId: 'silvia@griffin.com',
+    Sex: "Female",
+    Salary: 50000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 3,
-    Name: 'Silvestor',
+    doctorId: 'ICU003',
+    Name: 'Silvestor Salis',
     deptId: 3,
     Age: 42,
     Phone: "122445657",
-    Sex: "Male"
+    emailId: 'silvestor@salis.com',
+    Sex: "Male",
+    Salary: 65000,
+    Employment_Status: "Active"
   },
 ]
 
 const ENT = [
   {
-    doctorId: 1,
+    doctorId: 'ENT001',
     Name: 'Lois Griffin',
     deptId: 4,
     Age: 45,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'lois@griffin.com',
+    Sex: "Female",
+    Salary: 60000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
+    doctorId: 'ENT002',
     Name: 'Zayn Malik',
     deptId: 4,
     Age: 62,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'zayn@malik.com',
+    Sex: "Male",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   {
-    doctorId: 3,
+    doctorId: 'ENT003',
     Name: 'Scarlet Johanson',
     deptId: 4,
     Age: 47,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'scarlet@johnson.com',
+    Sex: "Female",
+    Salary: 70000,
+    Employment_Status: "Active"
   },
 ]
 
 const Neurology = [
   {
-    doctorId: 1,
+    doctorId: 'NEU001',
     Name: 'Meg Griffin',
     deptId: 5,
     Age: 40,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'meg@griffin.com',
+    Sex: "Female",
+    Salary: 60000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
-    Name: 'Quagmire',
+    doctorId: 'NEU002',
+    Name: 'Glenn Quagmire',
     deptId: 5,
     Age: 51,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'glenn@quagmire.com',
+    Sex: "Male",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   {
-    doctorId: 3,
-    Name: 'JOhn Timberlake',
+    doctorId: 'NEU003',
+    Name: 'John Timberlake',
     deptId: 5,
     Age: 43,
     Phone: "122445657",
-    Sex: "Male"
+    emailId: 'john@timberlake.com',
+    Sex: "Male",
+    Salary: 50000,
+      Employment_Status: "Active"
   },
  
 ]
@@ -178,136 +177,181 @@ const Neurology = [
 const Oncology = [
   
     {
-      doctorId: 1,
+      doctorId: 'ONC001',
       Name: 'Gahana Kumari',
       deptId: 6,
       Age: 25,
       Phone: "122445657",
-      Sex: "Female"
+      emailId: 'gahana@kumari.com',
+      Sex: "Female",
+      Salary: 60000,
+      Employment_Status: "Active"
     },
     {
-      doctorId: 2,
-      Name: 'Kristen',
+      doctorId: 'ONC002',
+      Name: 'Kristen Dsouza',
       deptId: 6,
       Age: 52,
       Phone: "122445657",
-      Sex: "Male"
+      emailId: 'kristen@dsouza.com',
+      Sex: "Male",
+      Salary: 60000,
+      Employment_Status: "Active"
     },
     {
-      doctorId: 3,
-      Name: 'Sheehan',
+      doctorId: 'ONC003',
+      Name: 'Sheehan Dsouza',
       deptId: 6,
       Age: 70,
       Phone: "122445657",
-      Sex: "Male"
+      emailId:'sheehan@dsouza.com',
+      Sex: "Male",
+      Salary: 0,
+      Employment_Status: "Inactive"
     },
   
 ]
 
 const Gynaecology = [
   {
-    doctorId: 1,
+    doctorId: 'GYN001',
     Name: 'Amar Shetty',
     deptId: 7,
     Age: 69,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'amar@shetty.com',
+    Sex: "Male",
+    Salary: 20000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
-    Name: 'Christoper',
+    doctorId: 'GYN002',
+    Name: 'Christoper Brown',
     deptId: 7,
     Age: 55,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'christoper@brown.com',
+    Sex: "Male",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   {
-    doctorId: 3,
-    Name: 'Sheela',
+    doctorId: 'GYN003',
+    Name: 'Sheela Acharya',
     deptId: 7,
     Age: 38,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'sheela@acharya.com',
+    Sex: "Female",
+    Salary: 60000,
+    Employment_Status: "Active"
   },
 ]
 
 const Pediatrics = [
   {
-    doctorId: 1,
+    doctorId: 'PED001',
     Name: 'Shrihari Acharya',
     deptId: 8,
     Age: 59,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'shrihari@acharya.com',
+    Sex: "Male",
+    Salary: 70000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
+    doctorId: 'PED002',
     Name: 'Dinesh Kumar',
     deptId: 8,
     Age: 39,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'dinesh@kumar.com',
+    Sex: "Male",
+    Salary: 60000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 3,
-    Name: 'Sharmila',
+    doctorId: 'PED003',
+    Name: 'Sharmila Dsilva',
     deptId: 8,
     Age: 40,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'sharmila@dsilva.com',
+    Sex: "Female",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
 ]
 
 const Psychiatry = [
   {
-    doctorId: 1,
-    Name: 'Francis',
+    doctorId: 'PSY001',
+    Name: 'Francis Goldin',
     deptId: 9,
     Age: 28,
     Phone: "122445657",
-    Sex: "Male"
+    emailId:'francis@gmail.com',
+    Sex: "Male",
+    Salary: 50000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
+    doctorId: 'PSY002',
     Name: 'Sara Sampaio',
     deptId: 9,
     Age: 30,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'sara@sampaio.com',
+    Sex: "Female",
+    Salary: 65000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 3,
+    doctorId: 'PSY003',
     Name: 'Irina Shyak',
     deptId: 9,
     Age: 40,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'irina@shyak.com',
+    Sex: "Female",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
 ]
 
 const Orthopaedic = [
   {
-    doctorId: 1,
+    doctorId: 'ORT001',
     Name: 'Roopesh Acharya',
     deptId: 10,
     Age: 25,
     Phone: "122445657",
-    Sex: "Male"
+    Sex: "Male",
+    emailId:'roopesh@acharya.com',
+    Salary: 70000,
+    Employment_Status: "Active"
   },
   {
-    doctorId: 2,
+    doctorId: 'ORT002',
     Name: 'Sankalpa Gowri',
     deptId: 10,
     Age: 30,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'sankalpa@gowri.com',
+    Sex: "Female",
+    Salary: 0,
+    Employment_Status: "Inactive"
   },
   {
-    doctorId: 3,
+    doctorId: 'ORT003',
     Name: 'Zeena Dsouza',
     deptId: 10,
     Age: 25,
     Phone: "122445657",
-    Sex: "Female"
+    emailId:'zeena@dsouza.com',
+    Sex: "Female",
+    Salary: 60000,
+    Employment_Status: "Active"
   },
 ]

@@ -1,6 +1,6 @@
 const Inpatient = [
   {
-    PatientId: 1,
+    PatientId: 'INP001',
     Name: 'Dinesh Kumar',
     Age: 50,
     Sex: 'Male',
@@ -9,13 +9,13 @@ const Inpatient = [
     DoctorId: 2,
     Room_no: 101,
     labReport_id:201,
-    DOAdmin: '20-01-2022',
-    DODischarge: '15-2-2022'
+    DOAdmin: '2024-01-22',
+    DODischarge: '2024-02-03'
 
   },
 
   {
-    PatientId: 2,
+    PatientId: 'INP002',
     Name: 'Gagan Dheep',
     Age: 49,
     Sex: 'Male',
@@ -24,14 +24,14 @@ const Inpatient = [
     DoctorId: 3,
     Room_no: 103,
     labReport_id:205,
-    DOAdmin: '22-01-2022',
-    DODischarge: '19-2-2022'
+    DOAdmin: '2024-02-09',
+    DODischarge: '2024-02-29'
   }
 ]
 
 const Outpatient = [
   {
-    PatientId: 1,
+    PatientId: 'OUTP001',
     Name: 'Kris Jennar',
     Age: 49,
     Sex: 'Male',
@@ -40,6 +40,6 @@ const Outpatient = [
     DoctorId: 4,
     Room_no: 104,
     labReport_id:209,
-    Date: '20-01-22'
+    Date: '2024-01-22'
   }
 ]

@@ -22,7 +22,10 @@
 
   <div class="add-doc-overlay overlay"></div>
 
-  <div class="delete-doc-overlay"></div>
+  
+  <div class="edit-doc-overlay"></div>
+
+  <div class="edit-doc-overlay-1"></div>
 
   <script src="../assets/DoctorData.js"></script> 
   <script src="department.js"></script>
@@ -37,8 +40,10 @@ let deptName = 'EMERGENCY';
 let deptId = 1;
 
 displayDeptFirstSection(deptName);
-addDoctor(deptId,dept,k);
-deleteDoctor(dept);
+addDoctor(deptId,dept,k,'EMG');
+getEditDoctor(dept);
+editDoctor(dept);
+
 </script>
   
 
