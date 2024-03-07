@@ -32,15 +32,19 @@
 </body>
 
 <script>
-  let k = displayDoctorList(Orthopaedic);
-  let dept = Orthopaedic;
+  let k = 0;
   let deptName = 'ORTHOPAEDIC';
-  let deptId = 10;
-
   displayDeptFirstSection(deptName);
-  addDoctor(deptId,dept,k,'ORT');
-  getEditDoctor(dept);
-  editDoctor(dept);
+  let deptId = 10;
+  document.addEventListener('DOMContentLoaded',()=>{
+  fetch('http://localhost:5000/getDoctorData/' + deptId)
+  .then(response=>response.json())
+  .then(data => displayDoctorList(data['data']));
+})
+  
+  
+  addDoctor(deptId,'ORT');
+  getEditDoctor(deptId);
 </script>
   
 

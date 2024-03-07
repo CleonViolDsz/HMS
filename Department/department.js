@@ -1,3 +1,4 @@
+
 document.querySelector('.sidebar').innerHTML = `
 <ul class="sidebar-menu">
       <li><a href="../dashboard.html">Dashboard</a></li>
@@ -55,9 +56,6 @@ function displayDeptFirstSection(deptName){
 }
 
 
-// document.querySelector('.js-add-doc').addEventListener('click',()=>{
-//   toggleOverlay();
-// })
 
 //overlay function
 
@@ -167,38 +165,38 @@ document.querySelector('.edit-doc-overlay-1').innerHTML =
       </div>
 `
 
-
+let Doctor_id = "";
 //edit doctor
-let Doctor_id = 0;
-function getEditDoctor(dept){
+
+function getEditDoctor(dept_id){
 document.querySelector('.edit-doc-first-btn').addEventListener('click',()=>{
-  let count = 0;
+  // let count = 0;
   Doctor_id = document.querySelector('.edit_doctorId').value;
-  dept.forEach(data=>{
-    if(data.doctorId == Doctor_id){
-      count++;
-      document.querySelector('.edit-doc-name').value = data.Name;
-      document.querySelector('.edit-doc-age').value = data.Age;
-      document.querySelector('.edit-doc-contact').value = data.Phone;
-      document.querySelector('.edit-doc-emailid').value = data.emailId;
-      document.querySelector('.edit-doc-sex').value = data.Sex;
-      document.querySelector('.edit-doc-salary').value = data.Salary;
+  fetch('http://localhost:5000/getIndividualDocData/' + Doctor_id + '/' + dept_id)
+  .then(response=>response.json())
+  .then(data=>{
+    if(data['data']){
+    const {doctor_name,phone,email,gender,Age,salary,employee_status} = data['data'];
+      document.querySelector('.edit-doc-name').value = doctor_name;
+      document.querySelector('.edit-doc-age').value = Age;
+      document.querySelector('.edit-doc-contact').value = phone;
+      document.querySelector('.edit-doc-emailid').value = email;
+      document.querySelector('.edit-doc-sex').value = gender;
+      document.querySelector('.edit-doc-salary').value = salary;
+      document.querySelector('.edit-emp-status').value = employee_status;
+
+      document.querySelector('.invalid-id').innerHTML = "";
+      toggleEditDoctorOverlay('edit-doc-overlay-1');
+      
     }
-  });
-
-  if(count == 1){
-    document.querySelector('.invalid-id').innerHTML = "";
-    toggleEditDoctorOverlay('edit-doc-overlay-1');
-  }
-
-  else{
-    document.querySelector('.invalid-id').innerHTML = "Invalid Report ID";
-  }
-
+    else{
+      document.querySelector('.invalid-id').innerHTML = "Invalid Doctor ID";
+    }
+  }); 
 })
 };
 
-function editDoctor(dept){
+
   document.querySelector('.edit-doc-btn').addEventListener('click',()=>{
     let Name = document.querySelector('.edit-doc-name').value;
     let Age = document.querySelector('.edit-doc-age').value;
@@ -209,27 +207,39 @@ function editDoctor(dept){
     let statusIndex = document.querySelector('.edit-emp-status').selectedIndex;
     let Employment_Status = document.querySelector('.edit-emp-status')[statusIndex].value;
 
-    dept.forEach(data=>{
-      if(data.doctorId == Doctor_id){
-        data.Name = Name;
-        data.Age = Age;
-        data.Phone = Phone;
-        data.emailId = emailId;
-        data.Sex = Sex;
-        data.Salary = Salary;
-        data.Employment_Status = Employment_Status;
-
-        displayDoctorList(dept);
+    fetch('http://localhost:5000/updateDoc/',{
+      headers:{
+        'content-type':'application/json'
+      },
+      method:'PATCH',
+      body:JSON.stringify({
+        doctor_name:Name,
+        phone:Phone,
+        email:emailId,
+        gender:Sex,
+        Age:Age,
+        salary:Salary,
+        employee_status:Employment_Status,
+        doctor_id:Doctor_id
+      })
+    })
+    .then(response=>response.json())
+    .then(data=>{
+      if(data.success){
         toggleEditDoctorOverlay('edit-doc-overlay-1');
         toggleEditDoctorOverlay('edit-doc-overlay');
+        location.reload();
       }
-    })
-  })
-}
+    });
+
+  });
+
 
 //Add doctor
 
-function addDoctor(deptId,dept,n,deptPrefix){
+let doctorId = "";
+function addDoctor(deptId,deptPrefix){
+  let doctor_id = "";
   document.querySelector('.js-add-doc-btn').addEventListener('click',()=>{
     let Name = document.querySelector('.doc-name').value;
     let Age = Number(document.querySelector('.doc-age').value);
@@ -239,60 +249,36 @@ function addDoctor(deptId,dept,n,deptPrefix){
     let EmailId = document.querySelector('.doc-email').value;
     let Salary = Number(document.querySelector('.doc-salary').value);
     let Employment_Status = 'Active';
-    n = ++n;
-    let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
-    let doctorId = `${deptPrefix}${id}`
+    
 
-    let newDoc = new createDoctor(doctorId,Name,deptId,Age,Phone,Sex,EmailId,Salary,Employment_Status);
-    console.log(newDoc);
-    dept.push(newDoc);
-    displayDoctorList(dept);
+    fetch('http://localhost:5000/getDoctorCount/' + deptId)
+    .then(response=>response.json())
+    .then(data=>{let n = data['data']
+        n = ++n;
+        let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
+        doctor_id = `${deptPrefix}${id}`
+        console.log(doctor_id);
+
+        fetch('http://localhost:5000/insertDocData',{
+          headers:{
+            'content-type':'application/json'
+          },
+          method:'POST',
+          body: JSON.stringify({doctor_id:doctor_id,doctor_name:Name,phone:Phone,email:EmailId,gender:Sex,Age:Age,salary:Salary,employee_status:Employment_Status,dept_id:deptId})
+        }
+        ).then(response => response.json())
+        .then(data=>console.log(data['data']));
+      });
+    
     toggleAddDoctorOverlay();
+    location.reload();
   })
 }
 
-//create doctor
-function createDoctor(doctorId,Name,deptId,Age,Phone,Sex,EmailId,Salary,Employment_Status){
-  this.doctorId = doctorId;
-  this.Name = Name;
-  this.deptId = deptId
-  this.Age = Age;
-  this.Phone = Phone;
-  this.emailId = EmailId;
-  this.Sex = Sex;
-  this.Salary = Salary;
-  this.Employment_Status = Employment_Status;
-  
 
-}
 
-//delete doctor
-// function deleteDoctor(dept){
-//   let c = 0;
-//   document.querySelector('.delete-doc-btn').addEventListener('click',()=>{
-//     let docId = document.querySelector('.doc-id').value;
-//     dept.forEach(doctor => {
-//       if(doctor.doctorId == docId){
-//         dept.splice((docId-1),1);
-//         c++;
-//       }
-//     });
-//     if(c >0){
-//     displayDoctorList(dept);
-//     toggleDeleteDoctorOverlay();
-//     document.querySelector('.invalid-doctor').innerHTML = "";
-//     }
-//     else{
-//       document.querySelector('.invalid-doctor').innerHTML = `Invalid Doctor Id`;
-//     }
-//   })
 
-// }
-
-//display doctor list
-
-function displayDoctorList(department) {
-  const doctors = document.querySelector('.department-table');
+const doctors = document.querySelector('.department-table');
   doctors.innerHTML = `
   <tr>
     <th>Doctor Id</th>
@@ -305,23 +291,34 @@ function displayDoctorList(department) {
     <th>Employment Status</th>
   </tr>`
 
+
+
+//display doctor list
+
+// let n = getNumber();
+
+
+function displayDoctorList(department) {
+  const doctors = document.querySelector('.department-table');
+
   let j = 0;
-  department.forEach(data => {
-  
+  department.forEach(({doctor_id,doctor_name,phone,email,gender,Age,salary,employee_status} )=> {
+    
     doctors.innerHTML += `
     <tr>
-    <td>${data.doctorId}</td>
-    <td>${data.Name}</td>
-    <td>${data.Age}</td>
-    <td>${data.Phone}</td>
-    <td>${data.emailId}</td>
-    <td>${data.Sex}</td>
-    <td>&#8377 ${data.Salary}</td>
-    <td>${data.Employment_Status}</td>
+    <td>${doctor_id}</td>
+    <td>${doctor_name}</td>
+    <td>${Age}</td>
+    <td>${phone}</td>
+    <td>${email}</td>
+    <td>${gender}</td>
+    <td>&#8377 ${salary}</td>
+    <td>${employee_status}</td>
     </tr>
     `
-    j++;
+    // console.log(++j);
+    ++j;
     
   });
-  return j;
+
 }

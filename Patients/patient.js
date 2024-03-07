@@ -110,11 +110,7 @@ function displayPatientFirstSection(patient_sec){
   `
 }
 
-
-
-function displayInpatientList(Patient) {
-
-  const patientList = document.querySelector('.patient-table');
+const patientList = document.querySelector('.patient-table');
   patientList.innerHTML = `
   <tr>
     <th>Patient ID</th>
@@ -129,20 +125,29 @@ function displayInpatientList(Patient) {
     
   </tr>`
 
+
+function displayInpatientList(Patient) {
+
   let j = 0;
-  Patient.forEach(data => {
+  Patient.forEach(({patient_id,name,age,phone_no,gender,disease,doctor_id,date_of_admission,date_of_discharge}) => {
+    if(date_of_discharge == null){
+      date_of_discharge = '--';
+    }
+    else{
+      date_of_discharge = new Date(date_of_discharge).toLocaleDateString();
+    }
   
     patientList.innerHTML += `
     <tr>
-    <td>${data.PatientId}</td>
-    <td>${data.Name}</td>
-    <td>${data.Age}</td>
-    <td>${data.Phone}</td>
-    <td>${data.Sex}</td>
-    <td>${data.Disease}</td>
-    <td>${data.DoctorId}</td>
-    <td>${data.DOAdmin}</td>
-    <td>${data.DODischarge}</td>
+    <td>${patient_id}</td>
+    <td>${name}</td>
+    <td>${age}</td>
+    <td>${phone_no}</td>
+    <td>${gender}</td>
+    <td>${disease}</td>
+    <td>${doctor_id}</td>
+    <td>${new Date(date_of_admission).toLocaleDateString()}</td>
+    <td>${date_of_discharge}</td>
     
     </tr>
     `
@@ -150,7 +155,7 @@ function displayInpatientList(Patient) {
     
   });
 
-  return j;
+  // return j;
 }
  
 function displayOutPatientList(Patient){
@@ -168,18 +173,18 @@ function displayOutPatientList(Patient){
   </tr>`
 
   let j = 0;
-  Patient.forEach(data => {
+  Patient.forEach(({patient_id,name,age,phone_no,gender,disease,doctor_id,date_of_admission})=>{
   
     patientList.innerHTML += `
     <tr>
-    <td>${data.PatientId}</td>
-    <td>${data.Name}</td>
-    <td>${data.Age}</td>
-    <td>${data.Phone}</td>
-    <td>${data.Sex}</td>
-    <td>${data.Disease}</td>
-    <td>${data.DoctorId}</td>
-    <td>${data.Date}</td>
+    <td>${patient_id}</td>
+    <td>${name}</td>
+    <td>${age}</td>
+    <td>${phone_no}</td>
+    <td>${gender}</td>
+    <td>${disease}</td>
+    <td>${doctor_id}</td>
+    <td>${new Date(date_of_admission).toLocaleDateString()}</td>
     
     </tr>
     `
@@ -203,6 +208,15 @@ function toggleAddPatientOverlay(class_name){
   }
 }
 
+function getDate(d){
+  let date = new Date(d);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2,'0');
+  let day = String(date.getDate()).padStart(2,'0');
+
+  return `${year}-${month}-${day}`;
+}
+
 function toggleEditPatientOverlay(class_name){
   let element = document.querySelector(`.${class_name}`);
   if(element.style.visibility === 'hidden'){
@@ -212,84 +226,3 @@ function toggleEditPatientOverlay(class_name){
     element.style.visibility = 'hidden';
   }
 }
-
-// Add Inpatient
-function addInpatient(n,patient_sec,overlay_class,patientPrefix){
-  document.querySelector('.add-inpatient-btn').addEventListener('click',()=>{
-    let Name = document.querySelector('.patient-name').value;
-    let Age = document.querySelector('.patient-age').value;
-    let Phone = document.querySelector('.patient-phone').value;
-    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
-    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
-    let Disease = document.querySelector('.patient-disease').value;
-    let DoctorId = document.querySelector('.patient-doc').value;
-    let DOAdmin = document.querySelector('.DOA').value;
-    let DODischarge = document.querySelector('.DOD').value;
-    n = ++n;
-    let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
-    PatientId = `${patientPrefix}${id}`;
-    if(DODischarge == ""){
-      DODischarge = "--";
-    }
-
-    let newPatient = new createInpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,DOAdmin,DODischarge);
-    patient_sec.push(newPatient);
-    displayInpatientList(patient_sec);
-    toggleAddPatientOverlay(overlay_class);
-  });
-}
-
-//add outpatient
-
-function addOutpatient(n,patient_sec,overlay_class,patientPrefix){
-  document.querySelector('.add-outpatient-btn').addEventListener('click',()=>{
-    let Name = document.querySelector('.patient-name').value;
-    let Age = document.querySelector('.patient-age').value;
-    let Phone = document.querySelector('.patient-phone').value;
-    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
-    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
-    let Disease = document.querySelector('.patient-disease').value;
-    let DoctorId = document.querySelector('.patient-doc').value;
-    let Date = document.querySelector('.date').value;
-    n = ++n;
-    let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
-    PatientId = `${patientPrefix}${id}`;
-
-    let newPatient = new createOutpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,Date);
-    patient_sec.push(newPatient);
-    displayOutPatientList(patient_sec);
-    toggleAddPatientOverlay(overlay_class);
-  })
-}
-
-
-
-//create inpatient
- function createInpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,DOAdmin,DODischarge){
-  this.PatientId = PatientId;
-  this.Name = Name;
-  this.Age = Age;
-  this.Phone = Phone;
-  this.Sex = Sex;
-  this.Disease = Disease;
-  this.DoctorId = DoctorId,
-  this.DOAdmin = DOAdmin,
-  this.DODischarge = DODischarge
- }
-
- //create outpatient
- function createOutpatient(PatientId,Name,Age,Phone,Sex,Disease,DoctorId,Date){
-  this.PatientId = PatientId;
-  this.Name = Name;
-  this.Age = Age;
-  this.Phone = Phone;
-  this.Sex = Sex;
-  this.Disease = Disease;
-  this.DoctorId = DoctorId,
-  this.Date = Date;
- }
-
- 
-
-
-

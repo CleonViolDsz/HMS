@@ -41,8 +41,29 @@ document.querySelector('.sidebar').innerHTML =
     </ul>
 `
 
-let k = displayLabReportList();
+// let k = displayLabReportList();
 displayLabReportFirstSection();
+
+const reportList = document.querySelector('.lab-report-table');
+  
+  reportList.innerHTML = 
+  `
+    
+    <th>Report ID</th>
+    <th>Patient ID</th>
+    <th>Category</th>
+    <th>Doctor ID</th>
+    <th>Impression</th>
+    <th>Report Date</th>
+    <th>Amount</th>
+    <th>Payment Status</th>
+  `
+
+document.addEventListener('DOMContentLoaded',()=>{
+  fetch('http://localhost:5000/getLabReport/' )
+  .then(response=>response.json())
+  .then(data=>displayLabReportList(data['data']));
+})
 // addReport(LabReport);
 
 
@@ -59,22 +80,18 @@ displayLabReportFirstSection();
     let statusIndex = document.querySelector('.payment-status').selectedIndex;
     let PaymentStatus = document.querySelector('.payment-status')[statusIndex].value;
 
-    // console.log(PatientIdNum);
-    // let newReport = createLabReport(PatientIdNum,++k,Test,DoctorIdNum,Impression,AmountNum,ReportDate,PaymentStatus);
-
-    const newReport = {
-      PatientId: PatientId,
-      Report_Id: ++k,
-      Test: Test,
-      DoctorId: DoctorId,
-      Impression: Impression,
-      Amount: AmountNum,
-      ReportDate: ReportDate,
-      PaymentStatus: PaymentStatus
-    }
-    LabReport.push(newReport);
-    displayLabReportList();
+    fetch('http://localhost:5000/insertLabReportData',{
+      headers:{
+        'content-type':'application/json'
+      },
+      method:'POST',
+      body: JSON.stringify({patient_id:PatientId,category:Test,impression:Impression,report_date:ReportDate,doctor_id:DoctorId,amount:AmountNum,payment_status:PaymentStatus})
+    })
+    .then(response => response.json())
+    .then(data=>console.log(data['data']));
+    
     toggleAddLabReportOverlay();
+    location.reload();
   });
 
 
@@ -85,27 +102,29 @@ displayLabReportFirstSection();
   let Report_Id= 0;
 
   document.querySelector('.edit-report-first-btn').addEventListener('click',()=>{
-    let count = 0;
     Report_Id = Number(document.querySelector('.edit_reportId').value);
-    LabReport.forEach(data=>{
-      if(data.Report_Id == Report_Id){
-        count++;
-        document.querySelector('.edit-patientId').value = data.PatientId;
-        document.querySelector('.edit-test').value = data.Test;
-        document.querySelector('.edit-doctorId').value = data.DoctorId;
-        document.querySelector('.edit-impression').value = data.Impression;
-        document.querySelector('.edit-report-date').value = data.ReportDate;
-        document.querySelector('.edit-report-amount').value = data.Amount;
+    fetch('http://localhost:5000/getIndividualLabReportData/' + Report_Id)
+    .then(response=>response.json())
+    .then(data=>{
+      if(data['data']){
+        const {patient_id,category,impression,report_date,doctor_id,amount,payment_status} = data['data'];
+        let reportDate = getDate(report_date);
+        document.querySelector('.edit-patientId').value = patient_id;
+        document.querySelector('.edit-test').value = category;
+        document.querySelector('.edit-doctorId').value = doctor_id;
+        document.querySelector('.edit-impression').value = impression;
+        document.querySelector('.edit-report-date').value = reportDate;
+        document.querySelector('.edit-report-amount').value = amount;
+        document.querySelector('.edit-payment-status').value = payment_status;
+
+        document.querySelector('.invalid-id').innerHTML = "";
+        toggleEditLabReportOverlay('edit-lab-report-overlay-1');
       }
-    });
-    if(count == 1){
-      document.querySelector('.invalid-id').innerHTML = "";
-      toggleEditLabReportOverlay('edit-lab-report-overlay-1');
-    }
-    else{
-      document.querySelector('.invalid-id').innerHTML = "Invalid Report ID";
-    }
-    
+      else{
+        document.querySelector('.invalid-id').innerHTML = "Invalid Report ID"
+      }
+    })
+
   })
 
   document.querySelector('.edit-report-btn').addEventListener('click',()=>{
@@ -118,20 +137,31 @@ displayLabReportFirstSection();
     let statusIndex = document.querySelector('.edit-payment-status').selectedIndex;
     let PaymentStatus = document.querySelector('.edit-payment-status')[statusIndex].value;
 
-    LabReport.forEach(data=>{
-      if(data.Report_Id == Report_Id){
-        data.PatientId = PatientId;
-        data.Test = Test;
-        data.Impression = Impression;
-        data.DoctorId = DoctorId;
-        data.Amount = Amount;
-        data.ReportDate = ReportDate;
-        data.PaymentStatus = PaymentStatus;
-        displayLabReportList();
+    fetch('http://localhost:5000/updateLabReport/',{
+      headers:{
+        'content-type':'application/json'
+      },
+      method:'PATCH',
+      body:JSON.stringify({
+        patient_id : PatientId,
+        category:Test,
+        impression:Impression,
+        report_date:ReportDate,
+        doctor_id:DoctorId,
+        amount:Amount,
+        payment_status:PaymentStatus,
+        report_id:Report_Id
+      })
+    })
+    .then(response=>response.json())
+    .then(data=>{
+      if(data.success){
         toggleEditLabReportOverlay('edit-lab-report-overlay-1');
         toggleEditLabReportOverlay('edit-lab-report-overlay');
+        location.reload();
       }
-    })
+    });
+
   })
 
 function displayLabReportFirstSection(){
@@ -148,34 +178,25 @@ function displayLabReportFirstSection(){
   `
 }
 
-function displayLabReportList(){
-  const reportList = document.querySelector('.lab-report-table');
+
+
+function displayLabReportList(LabReport){
+
   
-  reportList.innerHTML = 
-  `
-    
-    <th>Report ID</th>
-    <th>Patient ID</th>
-    <th>Category</th>
-    <th>Doctor ID</th>
-    <th>Impression</th>
-    <th>Report Date</th>
-    <th>Amount</th>
-    <th>Payment Status</th>
-  `
+  
   let j = 0;
-  LabReport.forEach(data => {
+  LabReport.forEach(({report_id,patient_id,category,impression,report_date,doctor_id,amount,payment_status}) => {
     reportList.innerHTML += `
     <tr>
       
-      <td>${data.Report_Id}</td>
-      <td>${data.PatientId}</td>
-      <td>${data.Test}</td>
-      <td>${data.DoctorId}</td>
-      <td>${data.Impression}</td>
-      <td>${data.ReportDate}</td>
-      <td>&#8377 ${data.Amount}</td>
-      <td >${data.PaymentStatus}</td>
+      <td>${report_id}</td>
+      <td>${patient_id}</td>
+      <td>${category}</td>
+      <td>${doctor_id}</td>
+      <td>${impression}</td>
+      <td>${new Date(report_date).toLocaleDateString()}</td>
+      <td>&#8377 ${amount}</td>
+      <td >${payment_status}</td>
     </tr>
     `
     j++;
@@ -183,6 +204,15 @@ function displayLabReportList(){
 
 
   return j;
+}
+
+function getDate(d){
+  let date = new Date(d);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2,'0');
+  let day = String(date.getDate()).padStart(2,'0');
+
+  return `${year}-${month}-${day}`;
 }
 
 function toggleAddLabReportOverlay() {
@@ -206,18 +236,3 @@ function toggleEditLabReportOverlay(class_name) {
 }
 
 
-//add lab report
-  
-
-
-
-// function createLabReport(PatientId, Report_Id,Test,DoctorId,Impression,Amount,ReportDate,PaymentStatus){
-//   this.PatientId = PatientId;
-//   this.Report_Id = Report_Id;
-//   this.Test = Test;
-//   this.DoctorId = DoctorId;
-//   this.Impression = Impression;
-//   this.Amount = Amount;
-//   this.ReportDate = ReportDate;
-//   this.PaymentStatus = PaymentStatus;
-// }

@@ -239,6 +239,7 @@ th,td{
 }
 
 .overlay {
+  
   position: fixed;
   left: 0;
   right: 0;

@@ -86,7 +86,7 @@
     </div>
   </div>
   
-  <script src="../assets/PatientsData.js"></script>
+  <!-- <script src="../assets/PatientsData.js"></script> -->
   <script src="patient.js"></script>
   <script src="../script.js"></script>
 
@@ -94,11 +94,17 @@
 <script>
   
   let patient_sec = 'INPATIENT';
-  let overlay = 'add-inpatient-overlay';
-
-  let c = displayInpatientList(Inpatient);
   displayPatientFirstSection(patient_sec);
-  addInpatient(c,Inpatient,'add-inpatient-overlay','INP');
+  let category = 'Inpatient';
+  document.addEventListener('DOMContentLoaded',()=>{
+    fetch('http://localhost:5000/getPatientData/' + category)
+    .then(response=>response.json())
+    .then(data=>displayInpatientList(data['data']));
+  })
+
+  
+  
+  addInpatient('add-inpatient-overlay','INP',category);
 
   document.querySelector('.add-patient').addEventListener('click',()=>{
     toggleAddPatientOverlay('add-inpatient-overlay');
@@ -109,36 +115,84 @@
   })
 
 
-  let Patient_Id = 0;
-document.querySelector('.edit-inpatient-first-btn').addEventListener('click',()=>{
-  let count = 0;
-  Patient_Id = document.querySelector('.edit_inpatientId').value;
-  Inpatient.forEach(data=>{
-    if(data.PatientId == Patient_Id){
-      count++;
-      document.querySelector('.edit-inpatient-name').value = data.Name;
-      document.querySelector('.edit-inpatient-age').value = data.Age;
-      document.querySelector('.edit-inpatient-phone').value = data.Phone;
-      document.querySelector('.edit-DOA').value = data.DOAdmin;
-      document.querySelector('.edit-inpatient-doc').value = data.DoctorId;
-      document.querySelector('.edit-inpatient-disease').value = data.Disease;
-      document.querySelector('.edit-DOD').value = data.DODischarge;
+  function addInpatient(overlay_class,patientPrefix,category){
+  let patient_id = "";
+  document.querySelector('.add-inpatient-btn').addEventListener('click',()=>{
+    let Name = document.querySelector('.patient-name').value;
+    let Age = Number(document.querySelector('.patient-age').value);
+    let Phone = document.querySelector('.patient-phone').value;
+    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
+    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
+    let Disease = document.querySelector('.patient-disease').value;
+    let DoctorId = document.querySelector('.patient-doc').value;
+    let DOAdmin = document.querySelector('.DOA').value;
+    let DODischarge = document.querySelector('.DOD').value;
+    
+    if(DODischarge == ""){
+      DODischarge = null;
     }
-  });
-  if(count == 1){
-    document.querySelector('.invalid-id').innerHTML = "";
-    toggleEditPatientOverlay('edit-inpatient-overlay-1');
+    fetch('http://localhost:5000/getPatientCount/' + category)
+    .then(response=>response.json())
+    .then(data=>{
+      let n = data['data'];
+      n = ++n;
+      
+      let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
+      patient_id = `${patientPrefix}${id}`;
+      console.log(patient_id);
 
-  }
-  else{
-    document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
-  }
+      fetch('http://localhost:5000/insertPatientData',{
+          headers:{
+            'content-type':'application/json'
+          },
+          method:'POST',
+          body: JSON.stringify({patient_id:patient_id,name:Name,age:Age,phone_no:Phone,gender:Sex,disease:Disease,doctor_id:DoctorId,date_of_admission:DOAdmin,date_of_discharge:DODischarge,category:category})
+        })
+        .then(response => response.json())
+        .then(data=>console.log(data['data']));
+    });
+
+    toggleAddPatientOverlay(overlay_class);
+    location.reload();
+  });
+}
+
+let PatientId = "";
+document.querySelector('.edit-inpatient-first-btn').addEventListener('click',()=>{ 
+  PatientId = document.querySelector('.edit_inpatientId').value;
+  fetch('http://localhost:5000/getIndividualPatientData/' + PatientId + '/' + category)
+  .then(response=>response.json())
+  .then(data=>{
+    if(data['data']){
+      const {name,age,phone_no,gender,disease,doctor_id,date_of_admission,date_of_discharge} = data['data'];
+      let doAdmin = getDate(date_of_admission);
+      let dODischarge = ""
+      if(date_of_discharge){
+        dODischarge = getDate(date_of_discharge);
+      }
+      document.querySelector('.edit-inpatient-name').value = name;
+      document.querySelector('.edit-inpatient-age').value = age;
+      document.querySelector('.edit-inpatient-phone').value = phone_no;
+      document.querySelector('.edit-inpatient-disease').value = disease;
+      document.querySelector('.edit-inpatient-sex').value = gender;
+      document.querySelector('.edit-inpatient-doc').value = doctor_id;
+      document.querySelector('.edit-DOA').value = doAdmin;
+      document.querySelector('.edit-DOD').value = dODischarge;
+
+      document.querySelector('.invalid-id').innerHTML = "";
+      toggleEditPatientOverlay('edit-inpatient-overlay-1');
+    }
+    else{
+      document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
+    }
+  })
+  
 });
 
-
 document.querySelector('.edit-inpatient-btn').addEventListener('click',()=>{
+  console.log(PatientId);
   let Name = document.querySelector('.edit-inpatient-name').value;
-  let Age = document.querySelector('.edit-inpatient-age').value;
+  let Age = Number(document.querySelector('.edit-inpatient-age').value);
   let Phone = document.querySelector('.edit-inpatient-phone').value;
   let DOAdmin = document.querySelector('.edit-DOA').value ;
   let DoctorId = document.querySelector('.edit-inpatient-doc').value;
@@ -147,22 +201,38 @@ document.querySelector('.edit-inpatient-btn').addEventListener('click',()=>{
   let sexIndex = document.querySelector('.edit-inpatient-sex').selectedIndex;
   let Sex = document.querySelector('.edit-inpatient-sex')[sexIndex].value;
 
-  Inpatient.forEach(data=>{
-    if(data.PatientId == Patient_Id){
-      data.Name = Name;
-      data.Age = Age;
-      data.Phone = Phone;
-      data.Disease = Disease;
-      data.DoctorId = DoctorId;
-      data.DOAdmin = DOAdmin;
-      data.DODischarge = DODischarge;
-      displayInpatientList(Inpatient);
-      toggleEditPatientOverlay('edit-inpatient-overlay-1');
-      toggleEditPatientOverlay('edit-inpatient-overlay');
-    }
+  fetch('http://localhost:5000/updatePatient',{
+    headers:{
+      'content-type':'application/json'
+    },
+    method:'PATCH',
+    body:JSON.stringify({
+      name: Name,
+      age:Age,
+      phone_no:Phone,
+      gender:Sex,
+      disease:Disease,
+      doctor_id:DoctorId,
+      date_of_admission:DOAdmin,
+      date_of_discharge:DODischarge,
+      patient_id:PatientId
+    })
+    })
+    .then(response=>response.json())
+    .then(data=>{
+      
+      if(data.success){
+        toggleEditPatientOverlay('edit-inpatient-overlay-1');
+        toggleEditPatientOverlay('edit-inpatient-overlay');
+        location.reload();
+      }
   });
-
 });
+
+
+
+
+
 </script>
 
 </html>

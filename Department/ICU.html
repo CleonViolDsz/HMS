@@ -28,7 +28,7 @@
   <div class="edit-doc-overlay"></div>
 
   <div class="edit-doc-overlay-1"></div>
-  <script src="../assets/DoctorData.js"></script> 
+  <!-- <script src="../assets/DoctorData.js"></script>  -->
   <script src="department.js"></script>
 
 <script src="../script.js"></script>
@@ -36,16 +36,19 @@
 </body>
 
 <script>
-  let k = displayDoctorList(ICU);
-
-  let dept = ICU;
-  let deptName = 'ICU';
+  // let k = displayDoctorList(ICU);
   let deptId =3;
-
-displayDeptFirstSection(deptName);
-addDoctor(deptId,dept,k,'ICU');
-getEditDoctor(dept);
-editDoctor(dept);
+  document.addEventListener('DOMContentLoaded',()=>{
+  fetch('http://localhost:5000/getDoctorData/' + deptId)
+  .then(response=>response.json())
+  .then(data => displayDoctorList(data['data']));
+})
+  let deptName = 'ICU';
+  displayDeptFirstSection(deptName);
+  
+addDoctor(deptId,'ICU');
+getEditDoctor(deptId);
+// editDoctor();
 
 </script>
   

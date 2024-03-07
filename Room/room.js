@@ -54,6 +54,20 @@ document.querySelector('.sidebar').innerHTML =
 
   `
 
+  const roomList = document.querySelector('.room-table');
+    roomList.innerHTML = 
+    `
+    <th>Room No.</th>
+    <th>Patient ID</th>
+    <th>Status</th>
+    `;
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      fetch('http://localhost:5000/getRoomData' )
+      .then(response=>response.json())
+      .then(data=>displayRoomList(data['data']));
+    })
+
   document.querySelector('.assign-room-overlay').innerHTML = 
   `
   <div class="assign-room-dropdown-box">
@@ -87,56 +101,89 @@ document.querySelector('.sidebar').innerHTML =
   document.querySelector('.assign-room-btn').addEventListener('click',()=>{
     let RoomNo = Number(document.querySelector('.room-no').value);
     let PatientId = document.querySelector('.patientId').value;
-    
-    let flag = false;
-    Room.forEach(data=>{
-      if(RoomNo == data.RoomNo && data.Status != 'Occupied'){
-        flag = true;
-        
-        data.PatientId = PatientId;
-        data.Status = 'Occupied';
+
+    fetch('http://localhost:5000/getIndRoomData/' + RoomNo)
+    .then(response=>response.json())
+    .then(data=>{
+      if(data['data']){
+        const {patient_id,status} = data['data'];
+        if(patient_id == null && status == 'Available'){
+          fetch('http://localhost:5000/updateRoom',{
+            headers:{
+              'content-type':'application/json'
+            },
+            method:'PATCH',
+            body:JSON.stringify({
+              patient_id:PatientId,
+              status:'Occupied',
+              room_no: RoomNo
+            })
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.success){
+              document.querySelector('.invalid-id').innerHTML = '';
+              toggleRoomOverlay('assign-room-overlay');
+              location.reload();
+            }
+          })
+        }
+        else{
+          document.querySelector('.invalid-id').innerHTML = 'The Room is Occupied';
+        }
+      }
+      else{
+        document.querySelector('.invalid-id').innerHTML = 'Invalid Room No.';
       }
     });
-    if(flag == true){
-      document.querySelector('.invalid-id').innerHTML = '';
-      toggleRoomOverlay('assign-room-overlay');
-      displayRoomList(Room);
-    }
-    else{
-      document.querySelector('.invalid-id').innerHTML = 'The Room is Occupied';
-    }
+    
   });
 
   document.querySelector('.vacate-room-btn').addEventListener('click',()=>{
     let RoomNo = Number(document.querySelector('.vacate-room-no').value);
     let PatientId = document.querySelector('.vacate-PatientId').value;
-    let flag = false;
-    let invalid_text = "";
-    Room.forEach(data=>{
-      if(RoomNo == data.RoomNo && data.Status == 'Occupied'){
-        if(PatientId == data.PatientId){
-          flag = true;
-          data.PatientId = null;
-        data.Status = 'Available'
+    fetch('http://localhost:5000/getIndRoomData/' + RoomNo)
+    .then(response=>response.json())
+    .then(data=>{
+      if(data['data']){
+        const {patient_id,status} = data['data'];
+        if(status == 'Occupied'){
+          if(patient_id == PatientId)
+        {
+          fetch('http://localhost:5000/updateRoom',{
+            headers:{
+              'content-type':'application/json'
+            },
+            method:'PATCH',
+            body:JSON.stringify({
+              patient_id:null,
+              status:'Available',
+              room_no: RoomNo
+            })
+          })
+          .then(response=>response.json())
+          .then(data=>{
+            if(data.success){
+              document.querySelector('.invalid-id').innerHTML = '';
+              toggleRoomOverlay('vacate-room-overlay');
+              location.reload();
+            }
+          })
         }
         else{
-          invalid_text = 'Invalid Patient ID';
+          
+          document.querySelector('.invalid-room-id').innerHTML = 'Invalid Patient ID'
         }
-        
+      }else{
+        document.querySelector('.invalid-room-id').innerHTML = 'The Room is Vacant';
+      }
       }
       else{
-        invalid_text = 'The Room is unoccupied';
+        document.querySelector('.invalid-room-id').innerHTML = 'Invalid Room No.';
       }
-    })
-    console.log(flag);
-    if(flag == true){
-      document.querySelector('.invalid-id').innerHTML = '';
-      toggleRoomOverlay('vacate-room-overlay');
-      displayRoomList(Room);
-    }
-    else{
-      document.querySelector('.invalid-room-id').innerHTML = invalid_text;
-    }
+      
+    });
+    
   });
 
 
@@ -160,24 +207,18 @@ document.querySelector('.sidebar').innerHTML =
   
 
 
-  displayRoomList(Room);
+  // displayRoomList(Room);
 
   function displayRoomList(Rooms){
-    const roomList = document.querySelector('.room-table');
-    roomList.innerHTML = 
-    `
-    <th>Room No.</th>
-    <th>Patient ID</th>
-    <th>Status</th>
-    `;
+    
 
     
-    Rooms.forEach(data=>{
+    Rooms.forEach(({room_no,status, patient_id})=>{
       roomList.innerHTML += 
       `
-      <td>${data.RoomNo}</td>
-      <td>${data.PatientId}</td>
-      <td>${data.Status}</td>
+      <td>${room_no}</td>
+      <td>${patient_id}</td>
+      <td>${status}</td>
       `
     })
   }

@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <script src="../assets/PatientsData.js"></script>
+  <!-- <script src="../assets/PatientsData.js"></script> -->
   <script src="patient.js"></script>
   <script src="../script.js"></script>
 </body>
@@ -138,9 +138,17 @@
 <script>
 
   let patient_sec = 'OUTPATIENT';
-  let c = displayOutPatientList(Outpatient);
   displayPatientFirstSection(patient_sec);
-  addOutpatient(c,Outpatient,'add-outpatient-overlay','OUTP');
+
+  let category = 'Outpatient';
+  document.addEventListener('DOMContentLoaded',()=>{
+    fetch('http://localhost:5000/getPatientData/' + category)
+    .then(response=>response.json())
+    .then(data=>displayOutPatientList(data['data']));
+  })
+  // let c = displayOutPatientList(Outpatient);
+  
+  addOutpatient('add-outpatient-overlay','OUTP',category);
 
   document.querySelector('.add-patient').addEventListener('click',()=>{
     toggleAddPatientOverlay('add-outpatient-overlay');
@@ -151,29 +159,72 @@
   })
 
 
-  let outPatient_id = 0;
+  function addOutpatient(overlay_class,patientPrefix,category){
+    let patient_id = "";
+  document.querySelector('.add-outpatient-btn').addEventListener('click',()=>{
+    let Name = document.querySelector('.patient-name').value;
+    let Age = document.querySelector('.patient-age').value;
+    let Phone = document.querySelector('.patient-phone').value;
+    let sexIndex = document.querySelector('.patient-sex').selectedIndex;
+    let Sex = document.querySelector('.patient-sex')[sexIndex].value;
+    let Disease = document.querySelector('.patient-disease').value;
+    let DoctorId = document.querySelector('.patient-doc').value;
+    let Date = document.querySelector('.date').value;
+    
+    fetch('http://localhost:5000/getPatientCount/' + category)
+    .then(response=>response.json())
+    .then(data=>{
+      let n = data['data'];
+      n = ++n;
+      // console.log(n);
+      let id = (n<10)?`00${n}`:(n<100)?`0${n}`:`${n}`;
+      patient_id = `${patientPrefix}${id}`;
+      console.log(patient_id);
+
+      fetch('http://localhost:5000/insertPatientData',{
+          headers:{
+            'content-type':'application/json'
+          },
+          method:'POST',
+          body: JSON.stringify({patient_id:patient_id,name:Name,age:Age,phone_no:Phone,gender:Sex,disease:Disease,doctor_id:DoctorId,date_of_admission:Date,date_of_discharge:null,category:category})
+        })
+        .then(response => response.json())
+        .then(data=>console.log(data['data']));
+    });
+
+    toggleAddPatientOverlay(overlay_class);
+    location.reload();
+  })
+}
+
+
+  let outPatient_id = "";
 document.querySelector('.edit-outpatient-first-btn').addEventListener('click',()=>{
-  let count = 0;
+  // let count = 0;
   outPatient_id = document.querySelector('.edit_outpatientId').value;
-  
-  Outpatient.forEach(data=>{
-    if(data.PatientId == outPatient_id){
-      count++;
-      document.querySelector('.edit-outpatient-name').value = data.Name;
-      document.querySelector('.edit-outpatient-age').value = data.Age;
-      document.querySelector('.edit-outpatient-phone').value = data.Phone;
-      document.querySelector('.edit-outpatient-disease').value = data.Disease;
-      document.querySelector('.edit-outpatient-doc').value = data.DoctorId;
-      document.querySelector('.edit-date').value = data.Date;
+  // outPatient_id = document.querySelector('.edit_inpatientId').value;
+  fetch('http://localhost:5000/getIndividualPatientData/' + outPatient_id + '/' + category)
+  .then(response=>response.json())
+  .then(data=>{
+    if(data['data']){
+      const {name,age,phone_no,gender,disease,doctor_id,date_of_admission} = data['data'];
+      let date = getDate(date_of_admission);
+      document.querySelector('.edit-outpatient-name').value = name;
+      document.querySelector('.edit-outpatient-age').value = age;
+      document.querySelector('.edit-outpatient-phone').value = phone_no;
+      document.querySelector('.edit-outpatient-disease').value = disease;
+      document.querySelector('.edit-outpatient-sex').value = gender;
+      document.querySelector('.edit-outpatient-doc').value = doctor_id;
+      document.querySelector('.edit-date').value = date;
+
+      document.querySelector('.invalid-id').innerHTML = "";
+      toggleEditPatientOverlay('edit-outpatient-overlay-1');
     }
-  });
-  if(count == 1){
-    document.querySelector('.invalid-id').innerHTML = "";
-    toggleEditPatientOverlay('edit-outpatient-overlay-1');
-  }
-  else{
-    document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
-  }
+    else{
+      document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
+    }
+  })
+
 });
 
 document.querySelector('.edit-outpatient-btn').addEventListener('click',()=>{
@@ -186,20 +237,33 @@ document.querySelector('.edit-outpatient-btn').addEventListener('click',()=>{
   let sexIndex = document.querySelector('.edit-outpatient-sex').selectedIndex;
   let Sex = document.querySelector('.edit-outpatient-sex')[sexIndex].value;
 
-  Outpatient.forEach(data=>{
-    if(data.PatientId == outPatient_id){
-      data.Name = Name;
-      data.Age = Age;
-      data.Sex = Sex;
-      data.Phone = Phone;
-      data.Disease = Disease;
-      data.DoctorId = DoctorId;
-      data.Date = Date;
-      displayOutPatientList(Outpatient);
-      toggleEditPatientOverlay('edit-outpatient-overlay-1');
-      toggleEditPatientOverlay('edit-outpatient-overlay');
-    }
+  fetch('http://localhost:5000/updatePatient',{
+    headers:{
+      'content-type':'application/json'
+    },
+    method:'PATCH',
+    body:JSON.stringify({
+      name: Name,
+      age:Age,
+      phone_no:Phone,
+      gender:Sex,
+      disease:Disease,
+      doctor_id:DoctorId,
+      date_of_admission:Date,
+      date_of_discharge:null,
+      patient_id:outPatient_id
+    })
+    })
+    .then(response=>response.json())
+    .then(data=>{
+      
+      if(data.success){
+        toggleEditPatientOverlay('edit-outpatient-overlay-1');
+        toggleEditPatientOverlay('edit-outpatient-overlay');
+        location.reload();
+      }
   });
+
 });
 </script>
 </html>

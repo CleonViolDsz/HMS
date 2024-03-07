@@ -41,7 +41,27 @@ document.querySelector('.sidebar').innerHTML =
 `
 
 displayBillingFirstSection();
-let k= displayBillingList()
+const billingList = document.querySelector('.billing-table');
+
+  billingList.innerHTML = 
+  `
+    <th>Bill No.</th>
+    <th>Patient ID</th>
+    <th>Room Charges</th>
+    <th>Operation Charges</th>
+    <th>Lab Charges</th>
+    <th>Medicine Charges</th>
+    <th>Total Bill</th>
+    <th>Status</th>
+  `
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    fetch('http://localhost:5000/getBillingData' )
+    .then(response=>response.json())
+    .then(data=>displayBillingList(data['data']));
+  })
+
+// let k= displayBillingList()
 
 document.querySelector('.add-bill-overlay').innerHTML =
 `
@@ -76,27 +96,27 @@ document.querySelector('.edit-bill').addEventListener('click',()=>{
   toggleEditBillOverlay('edit-bill-overlay');
 });
 
-let Patient_Id = 0;
+let Patient_Id ="";
 document.querySelector('.edit-bill-first-btn').addEventListener('click',()=>{
-  let count = 0;
   Patient_Id = document.querySelector('.edit_patientId').value;
-  console.log(Patient_Id);
-  Bills.forEach(data=>{
-    if(data.PatientId == Patient_Id){
-      count++;
-      document.querySelector('.edit-room-charge').value = data.Room_Charges;
-      document.querySelector('.edit-operation-charge').value = data.Operation_Charges;
-      document.querySelector('.edit-lab-charge').value = data.Lab_Charges;
-      document.querySelector('.edit-medicine-charge').value = data.Medicine_Charges;
-    }
-  });
-  if(count == 1){
-    document.querySelector('.invalid-id').innerHTML = "";
+  fetch('http://localhost:5000/getIndividualBillData/' + Patient_Id)
+  .then(response=>response.json())
+  .then(data=>{
+    if(data['data']){
+      const {operation_charges,lab_charges,medicine_charges,room_charges,payment_status} = data['data'];
+      document.querySelector('.edit-room-charge').value = room_charges;
+      document.querySelector('.edit-operation-charge').value = operation_charges;
+      document.querySelector('.edit-lab-charge').value = lab_charges;
+      document.querySelector('.edit-medicine-charge').value = medicine_charges;
+      document.querySelector('.edit-payment-status').value = payment_status;
+
+      document.querySelector('.invalid-id').innerHTML = "";
       toggleEditBillOverlay('edit-bill-overlay-1');
-  }
-  else{
-  document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
-  }
+    }
+    else{
+      document.querySelector('.invalid-id').innerHTML = "Invalid Patient ID";
+    }
+  })
 });
 
 document.querySelector('.edit-bill-btn').addEventListener('click',()=>{
@@ -106,19 +126,44 @@ document.querySelector('.edit-bill-btn').addEventListener('click',()=>{
   let Medicine_Charges = Number(document.querySelector('.edit-medicine-charge').value);
   let statusIndex = document.querySelector('.edit-payment-status').selectedIndex;
     let Payment_Status = document.querySelector('.edit-payment-status')[statusIndex].value;
+  let total_bill = Room_Charges + Operation_Charges + Lab_Charges + Medicine_Charges;
 
-    Bills.forEach(data=>{
-      if(data.PatientId == Patient_Id){
-        data.Room_Charges = Room_Charges;
-        data.Operation_Charges = Operation_Charges;
-        data.Lab_Charges = Lab_Charges;
-        data.Medicine_Charges = Medicine_Charges;
-        data.Payment_Status = Payment_Status;
-        displayBillingList();
+  fetch('http://localhost:5000/updateBill/',{
+      headers:{
+        'content-type':'application/json'
+      },
+      method:'PATCH',
+      body:JSON.stringify({
+        operation_charges:Operation_Charges,
+        lab_charges:Lab_Charges,
+        medicine_charges:Medicine_Charges,
+        room_charges:Room_Charges,
+        total_bill:total_bill,
+        payment_status:Payment_Status,
+        patient_id:Patient_Id
+      })
+    })
+    .then(response=>response.json())
+    .then(data=>{
+      if(data.success){
         toggleEditBillOverlay('edit-bill-overlay-1');
         toggleEditBillOverlay('edit-bill-overlay');
+        location.reload();
       }
-    })
+    });
+
+    // Bills.forEach(data=>{
+    //   if(data.PatientId == Patient_Id){
+    //     data.Room_Charges = Room_Charges;
+    //     data.Operation_Charges = Operation_Charges;
+    //     data.Lab_Charges = Lab_Charges;
+    //     data.Medicine_Charges = Medicine_Charges;
+    //     data.Payment_Status = Payment_Status;
+    //     displayBillingList();
+    //     toggleEditBillOverlay('edit-bill-overlay-1');
+    //     toggleEditBillOverlay('edit-bill-overlay');
+    //   }
+    // })
 
 })
 
@@ -129,21 +174,22 @@ document.querySelector('.add-bill-btn').addEventListener('click',()=>{
   let Lab_Charges = Number(document.querySelector('.lab-charge').value);
   let Medicine_Charges = Number(document.querySelector('.medicine-charge').value);
   let statusIndex = document.querySelector('.payment-status').selectedIndex;
-    let Payment_Status = document.querySelector('.payment-status')[statusIndex].value;
+  let Payment_Status = document.querySelector('.payment-status')[statusIndex].value;
 
-    const newBill={
-      BillNo: ++k,
-      PatientId: PatientId,
-      Room_Charges: Room_Charges,
-      Operation_Charges: Operation_Charges,
-      Lab_Charges: Lab_Charges,
-      Medicine_Charges: Medicine_Charges,
-      Payment_Status: Payment_Status
-    };
+  let total_bill = Operation_Charges+Lab_Charges+Medicine_Charges+Room_Charges;
+  fetch('http://localhost:5000/insertBillData',{
+      headers:{
+        'content-type':'application/json'
+      },
+      method:'POST',
+      body: JSON.stringify({patient_id:PatientId,operation_charges:Operation_Charges,lab_charges:Lab_Charges,medicine_charges:Medicine_Charges,room_charges:Room_Charges,total_bill:total_bill,payment_status:Payment_Status})
+    })
+    .then(response => response.json())
+    .then(data=>console.log(data['data']));
 
-    Bills.push(newBill);
-    displayBillingList();
+    
     toggleAddBillOverlay();
+    location.reload();
 });
 
 
@@ -162,33 +208,21 @@ function displayBillingFirstSection(){
   `
 }
 
-function displayBillingList() {
-  const billingList = document.querySelector('.billing-table');
-
-  billingList.innerHTML = 
-  `
-    <th>Bill No.</th>
-    <th>Patient ID</th>
-    <th>Room Charges</th>
-    <th>Operation Charges</th>
-    <th>Lab Charges</th>
-    <th>Medicine Charges</th>
-    <th>Total Bill</th>
-    <th>Status</th>
-  `
+function displayBillingList(Bills) {
+  
   let j = 0;
-  Bills.forEach(data => {
+  Bills.forEach(({bill_no,patient_id,operation_charges,lab_charges,medicine_charges,room_charges,total_bill,payment_status}) => {
     billingList.innerHTML += 
     `
     <tr>
-      <td>${data.BillNo}</td>
-      <td>${data.PatientId}</td>
-      <td>&#8377 ${data.Room_Charges}</td>
-      <td>&#8377 ${data.Operation_Charges}</td>
-      <td>&#8377 ${data.Lab_Charges}</td>
-      <td>&#8377 ${data.Medicine_Charges}</td>
-      <td>&#8377 ${data.Lab_Charges + data.Operation_Charges +data.Room_Charges + data.Medicine_Charges}</td>
-      <td>${data.Payment_Status}</td>
+      <td>${bill_no}</td>
+      <td>${patient_id}</td>
+      <td>&#8377 ${room_charges}</td>
+      <td>&#8377 ${operation_charges}</td>
+      <td>&#8377 ${lab_charges}</td>
+      <td>&#8377 ${medicine_charges}</td>
+      <td>&#8377 ${total_bill}</td>
+      <td>${payment_status}</td>
     </tr>
     `
     j++;
