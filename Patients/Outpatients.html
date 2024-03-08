@@ -9,6 +9,7 @@
 <body>
   <header class="header ">
     <h1 class="header-logo">HMS</h1>
+    <a href='../login.html' class="log-out-btn">Log out</a>
   </header>
   
   <sidebar class="sidebar"></sidebar>
@@ -265,5 +266,48 @@ document.querySelector('.edit-outpatient-btn').addEventListener('click',()=>{
   });
 
 });
+
+
+document.addEventListener('keydown',(event)=>{
+  if(event.key == 'Enter'){
+    let patient_id = document.querySelector('.search-bar').value;
+    fetch('http://localhost:5000/getIndividualPatientData/' + patient_id + '/' + category)
+  .then(response=>response.json())
+  .then(data=>{
+    
+    if(data['data']){
+      const {patient_id,name,age,phone_no,gender,disease,doctor_id,date_of_admission} = data['data'];
+      document.querySelector('.outpatient-table').innerHTML = 
+      `
+      <thead>
+      <th>Patient ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Phone</th>
+      <th>Sex</th>
+      <th>Disease</th>
+      <th>Doctor Id</th>
+      <th>Date of Admission</th>
+      </thead>
+      
+      <tr>
+      <td>${patient_id}</td>
+      <td>${name}</td>
+      <td>${age}</td>
+      <td>${phone_no}</td>
+      <td>${gender}</td>
+      <td>${disease}</td>
+      <td>${doctor_id}</td>
+      <td>${new Date(date_of_admission).toLocaleDateString()}</td>
+      </tr>
+      `
+    }
+    else{
+      document.querySelector('.outpatient-table').innerHTML = 'No result found';
+    }
+  });
+
+  }
+})
 </script>
 </html>

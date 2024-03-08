@@ -57,9 +57,11 @@ document.querySelector('.sidebar').innerHTML =
   const roomList = document.querySelector('.room-table');
     roomList.innerHTML = 
     `
+    <thead>
     <th>Room No.</th>
     <th>Patient ID</th>
     <th>Status</th>
+    </thead>
     `;
 
     document.addEventListener('DOMContentLoaded',()=>{
@@ -190,19 +192,43 @@ document.querySelector('.sidebar').innerHTML =
   document.addEventListener('keydown',(event)=>{
     if(event.key == 'Enter'){
      let search_roomNo = Number(document.querySelector('.search-bar').value);
-      const searchList = [];
-      let flag = false;
-     Room.forEach(data => {
-      if(data.RoomNo == search_roomNo){
-        flag = true;
-        searchList.push(data);
-        displayRoomList(searchList);
+     fetch('http://localhost:5000/getIndRoomData/' + search_roomNo)
+    .then(response=>response.json())
+    .then(data=>{
+      if(data['data']){
+        const {room_no,status,patient_id} = data['data'];
+        document.querySelector('.room-table').innerHTML = 
+        `
+        <thead>
+        <th>Room No.</th>
+        <th>Patient ID</th>
+        <th>Status</th>
+        </thead>
+
+        <tr>
+          <td>${room_no}</td>
+          <td>${patient_id}</td>
+          <td>${status}</td>
+        </tr>
+        `
       }
-     });
-     if(flag == false){
-      document.querySelector('.room-table').innerHTML = 'No results found';
+      else{
+        document.querySelector('.room-table').innerHTML = 'No results found';
+      }
+    })
+    //   const searchList = [];
+    //   let flag = false;
+    //  Room.forEach(data => {
+    //   if(data.RoomNo == search_roomNo){
+    //     flag = true;
+    //     searchList.push(data);
+    //     displayRoomList(searchList);
+    //   }
+    //  });
+    //  if(flag == false){
+    //   document.querySelector('.room-table').innerHTML = 'No results found';
+    //  }
      }
-    }
   });
   
 
@@ -216,9 +242,11 @@ document.querySelector('.sidebar').innerHTML =
     Rooms.forEach(({room_no,status, patient_id})=>{
       roomList.innerHTML += 
       `
+      <tr>
       <td>${room_no}</td>
       <td>${patient_id}</td>
       <td>${status}</td>
+      </tr>
       `
     })
   }

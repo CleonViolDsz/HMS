@@ -16,6 +16,8 @@ for (i = 0; i < dropdown.length; i++) {
 }
 
 
-
+// document.querySelector('.log-out-btn').addEventListener('click',()=>{
+//   window.open("login.html","_self");
+// })
 
 

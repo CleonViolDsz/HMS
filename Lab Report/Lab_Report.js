@@ -164,12 +164,55 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   })
 
+  document.addEventListener('keydown',(event)=>{
+    if(event.key == 'Enter'){
+      let report_id = document.querySelector('.search-bar').value;
+      fetch('http://localhost:5000/getIndividualLabReportData/' + report_id)
+    .then(response=>response.json())
+    .then(data=>{
+      if(data['data'])
+      {
+        const {report_id,patient_id,category,impression,report_date,doctor_id,amount,payment_status} = data['data']
+        reportList.innerHTML = 
+            `
+            <thead>
+          <th>Report ID</th>
+          <th>Patient ID</th>
+          <th>Category</th>
+          <th>Doctor ID</th>
+          <th>Impression</th>
+          <th>Report Date</th>
+          <th>Amount</th>
+          <th>Payment Status</th>
+          </thead>
+
+          <tr>
+      
+      <td>${report_id}</td>
+      <td>${patient_id}</td>
+      <td>${category}</td>
+      <td>${doctor_id}</td>
+      <td>${impression}</td>
+      <td>${new Date(report_date).toLocaleDateString()}</td>
+      <td>&#8377 ${amount}</td>
+      <td >${payment_status}</td>
+    </tr>
+        `
+      }
+      else{
+        reportList.innerHTML = 'No result found';
+      }
+    })
+    }
+  })
+
+
 function displayLabReportFirstSection(){
   document.querySelector('.lab-report-first-section').innerHTML=
   `
   <h1>LAB REPORTS</h1>
   <div class="dept-sub-container">
-      <input class="search-bar" type="text" placeholder="Search">
+      <input class="search-bar" class="search-bar" type="text" placeholder="Search Report ID">
       <div>
         <button class="add-report" onclick="toggleAddLabReportOverlay()">Add Report</button>
         <button class="edit-report">Edit Report</button>

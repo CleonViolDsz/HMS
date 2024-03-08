@@ -23,6 +23,26 @@ class DbService {
     return instance? instance: new DbService();
   }
 
+  //get Login info
+
+  async getLoginInfo(username,password){
+    try{
+      const response = await new Promise((resolve, reject)=>{
+        const query = `select * from user where user_id = ? and password = ?;`;
+        connection.query(query,[username,password],(err,results)=>{
+          if(err) reject(new Error(err.message));
+          resolve(results[0]);
+        })
+      });
+      console.log(response);
+      return response;
+    }
+    catch(error){
+      console.log(error);
+    }
+
+  }
+
 
 //get doctor data
   async getDoctorData(id){
@@ -208,7 +228,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -228,7 +248,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -269,7 +289,7 @@ class DbService {
           resolve(results.affectedRows);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -290,7 +310,7 @@ class DbService {
           resolve(results[0]);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -310,7 +330,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -329,7 +349,7 @@ class DbService {
           resolve(results[0]);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -349,7 +369,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -368,7 +388,7 @@ class DbService {
           resolve(results[0]);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -388,7 +408,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -408,7 +428,7 @@ class DbService {
           resolve(results[0]);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -429,7 +449,7 @@ class DbService {
           resolve(results);
         })
       });
-      console.log(response);
+      // console.log(response);
       return response;
     }
     catch(error){
@@ -437,6 +457,65 @@ class DbService {
     }
   }
 
+
+  async getAllDocCount(){
+    try{
+      const response = await new Promise((resolve, reject)=>{
+        const query = `
+        select count(*) as doctor_count from doctor;
+        `;
+        connection.query(query,(err,results)=>{
+          
+          if(err) reject(new Error(err.message));
+          resolve(results[0]);
+        })
+      });
+      // console.log(response);
+      return response;
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  async getAllPatientCount(){
+    try{
+      const response = await new Promise((resolve, reject)=>{
+        const query = `
+        select count(*) as patient_count from patient;
+        `;
+        connection.query(query,(err,results)=>{
+          
+          if(err) reject(new Error(err.message));
+          resolve(results[0]);
+        })
+      });
+      // console.log(response);
+      return response;
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  async getAllReportCount(){
+    try{
+      const response = await new Promise((resolve, reject)=>{
+        const query = `
+        select count(*) as report_count from lab_report;
+        `;
+        connection.query(query,(err,results)=>{
+          if(err) reject(new Error(err.message));
+          resolve(results[0]);
+        })
+      });
+      // console.log(response);
+      return response;
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
 
 }
 

@@ -8,6 +8,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+//login
+
+app.get('/getLoginInfo/:username/:password',(request,response)=>{
+  const {username,password} = request.params;
+  const db = dbservice.getDbServieInstance();
+  const result = db.getLoginInfo(username,password);
+  result.then(data=>response.json({data:data}))
+  .catch(err=>console.log(err));
+})
+
 //read
 
 //read Doctor Data
@@ -134,7 +144,7 @@ app.post('/insertBillData',(request,response)=>{
 //updadte
 
 //update doc 
-app.use('/getIndividualDocData/:doc_id/:dept_id',(request,response)=>{
+app.get('/getIndividualDocData/:doc_id/:dept_id',(request,response)=>{
   const {doc_id,dept_id} = request.params;
   const db = dbservice.getDbServieInstance();
   const result = db.getIndDoc(doc_id,dept_id);
@@ -142,7 +152,7 @@ app.use('/getIndividualDocData/:doc_id/:dept_id',(request,response)=>{
   .catch(err=>console.log(err));
 })
 
-app.use('/updateDoc',(request,response)=>{
+app.patch('/updateDoc',(request,response)=>{
   const {doctor_name,phone,email,gender,Age,salary,employee_status,doctor_id} = request.body;
   const db = dbservice.getDbServieInstance();
   const result = db.updateDoc(doctor_name,phone,email,gender,Age,salary,employee_status,doctor_id)
@@ -152,7 +162,7 @@ app.use('/updateDoc',(request,response)=>{
 
 //update Patients
 
-app.use('/getIndividualPatientData/:patient_id/:category',(request,response)=>{
+app.get('/getIndividualPatientData/:patient_id/:category',(request,response)=>{
   const {patient_id,category} = request.params;
   const db = dbservice.getDbServieInstance();
   const result = db.getIndPatient(patient_id,category);
@@ -160,7 +170,7 @@ app.use('/getIndividualPatientData/:patient_id/:category',(request,response)=>{
   .catch(err=>console.log(err));
 })
 
-app.use('/updatePatient',(request,response)=>{
+app.patch('/updatePatient',(request,response)=>{
   const {name,age,phone_no,gender,disease,doctor_id,date_of_admission,date_of_discharge,patient_id} = request.body;
   const db = dbservice.getDbServieInstance();
   const result = db.updatePatient(name,age,phone_no,gender,disease,doctor_id,date_of_admission,date_of_discharge,patient_id)
@@ -169,7 +179,7 @@ app.use('/updatePatient',(request,response)=>{
 })
 
 //update Lab Reports
-app.use('/getIndividualLabReportData/:id',(request,response)=>{
+app.get('/getIndividualLabReportData/:id',(request,response)=>{
   const {id} = request.params;
   const db = dbservice.getDbServieInstance();
   const result = db.getIndLabReport(id);
@@ -177,7 +187,7 @@ app.use('/getIndividualLabReportData/:id',(request,response)=>{
   .catch(err=>console.log(err));
 })
 
-app.use('/updateLabReport',(request,response)=>{
+app.patch('/updateLabReport',(request,response)=>{
   const {patient_id,category,impression,report_date,doctor_id,amount,payment_status,report_id} = request.body;
   const db = dbservice.getDbServieInstance();
   const result = db.updateLabReport(patient_id,category,impression,report_date,doctor_id,amount,payment_status,report_id)
@@ -186,7 +196,7 @@ app.use('/updateLabReport',(request,response)=>{
 })
 
 //Update bill
-app.use('/getIndividualBillData/:id',(request,response)=>{
+app.get('/getIndividualBillData/:id',(request,response)=>{
   const {id} = request.params;
   const db = dbservice.getDbServieInstance();
   const result = db.getIndBill(id);
@@ -194,7 +204,7 @@ app.use('/getIndividualBillData/:id',(request,response)=>{
   .catch(err=>console.log(err));
 })
 
-app.use('/updateBill',(request,response)=>{
+app.patch('/updateBill',(request,response)=>{
   const {operation_charges,lab_charges,medicine_charges,room_charges,total_bill,payment_status,patient_id} = request.body;
   const db = dbservice.getDbServieInstance();
   const result = db.updateBill(operation_charges,lab_charges,medicine_charges,room_charges,total_bill,payment_status,patient_id)
@@ -204,7 +214,7 @@ app.use('/updateBill',(request,response)=>{
 
 //update Room
 
-app.use('/getIndRoomData/:room_no',(request,response)=>{
+app.get('/getIndRoomData/:room_no',(request,response)=>{
   const {room_no} = request.params;
   const db = dbservice.getDbServieInstance();
   const result = db.getIndRoom(room_no);
@@ -213,11 +223,37 @@ app.use('/getIndRoomData/:room_no',(request,response)=>{
   .catch(err=>console.log(err));
 })
 
-app.use('/updateRoom',(request,response)=>{
+app.patch('/updateRoom',(request,response)=>{
   const {patient_id,status,room_no} = request.body;
   const db = dbservice.getDbServieInstance();
   const result = db.updateRoom(patient_id,status,room_no);
   result.then(data=>response.json({success:data}))
+  .catch(err=>console.log(err));
+})
+
+
+//get doctor count
+app.get('/getAllDocCount',(request,response)=>{
+  const db = dbservice.getDbServieInstance();
+  const result = db.getAllDocCount();
+  result.then(data=>response.json({data:data}))
+  .catch(err=>console.log(err));
+})
+
+
+//get patient count
+app.get('/getAllPatientCount',(request,response)=>{
+  const db = dbservice.getDbServieInstance();
+  const result = db.getAllPatientCount();
+  result.then(data=>response.json({data:data}))
+  .catch(err=>console.log(err));
+})
+
+//get lab report count
+app.get('/getAllReportCount',(request,response)=>{
+  const db = dbservice.getDbServieInstance();
+  const result = db.getAllReportCount();
+  result.then(data=>response.json({data:data}))
   .catch(err=>console.log(err));
 })
 

@@ -39,6 +39,11 @@ document.querySelector('.sidebar').innerHTML = `
       <li><a href="../Billing/Billing.html">Billing</a></li>
     </ul>
 `
+document.querySelector('.header').innerHTML = 
+`
+<h1 class="header-logo">HMS</h1>
+    <a href='../login.html' class="log-out-btn">Log out</a>
+`;
 
 //display header section of department
 
@@ -46,7 +51,7 @@ function displayDeptFirstSection(deptName){
   document.querySelector('.dept-first-sec').innerHTML = `
   <h1>${deptName} DEPARTMENT</h1>
     <div class="dept-sub-container">
-      <input class="search-bar" type="text" placeholder="Search">
+      <input class="search-bar" type="text" class='search-bar' placeholder="Search Doctor ID">
       <div>
         <button class="add-doctor js-add-doc" onclick="toggleAddDoctorOverlay()">Add Doctor</button>
         <button class="edit-doctor" onclick="toggleEditDoctorOverlay('edit-doc-overlay')">Edit Doctor</button>
@@ -80,6 +85,7 @@ function toggleEditDoctorOverlay(class_name) {
     }
 }
 
+
  //overlay add doctor inner content
 document.querySelector('.add-doc-overlay').innerHTML = 
 `<div class="add-doc-dropdown-box">
@@ -104,19 +110,6 @@ document.querySelector('.add-doc-overlay').innerHTML =
   <button class="add-doc-btn js-add-doc-btn">Submit</button>
 </div>
 </div>`
-
-//overlay delete doctor inner content 
-// document.querySelector('.delete-doc-overlay').innerHTML = `
-// <div class="delete-doc-dropdown-box">
-// <p class="add-title">DELETE DOCTOR</p>
-// <p>Enter Doctor Id:</p>
-// <input type="text" class="doc-id">
-// <div class="btn-ctn">
-// <button class="delete-doc-btn">Delete Doctor</button>
-// </div>
-// <p class="invalid-doctor"></p>
-// </div>
-// `
 
 
 //edit doctor overlay
@@ -234,6 +227,9 @@ document.querySelector('.edit-doc-first-btn').addEventListener('click',()=>{
 
   });
 
+  //search
+
+  
 
 //Add doctor
 
@@ -321,4 +317,46 @@ function displayDoctorList(department) {
     
   });
 
+}
+
+function searchDoc(dept_id){
+  document.addEventListener('keydown',(event)=>{
+    if(event.key == 'Enter'){
+      let doctor_id = document.querySelector('.search-bar').value;
+      fetch('http://localhost:5000/getIndividualDocData/' + doctor_id + '/' + dept_id)
+      .then(response=>response.json())
+      .then(data=>{
+        if(data['data']){
+          const {doctor_id,doctor_name,phone,email,gender,Age,salary,employee_status} = data['data'];
+          doctors.innerHTML = `
+          <thead>
+            <th>Doctor Id</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Email ID</th>
+            <th>Sex</th>
+            <th>Salary</th>
+            <th>Employment Status</th>
+          </thead>
+
+          <tr>
+          <td>${doctor_id}</td>
+          <td>${doctor_name}</td>
+          <td>${Age}</td>
+          <td>${phone}</td>
+          <td>${email}</td>
+          <td>${gender}</td>
+          <td>&#8377 ${salary}</td>
+          <td>${employee_status}</td>
+          </tr>
+          `
+        }
+        else{
+          doctors.innerHTML = 'No result found';
+        }
+      })
+
+    }
+  })
 }

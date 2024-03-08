@@ -192,6 +192,46 @@ document.querySelector('.add-bill-btn').addEventListener('click',()=>{
     location.reload();
 });
 
+document.addEventListener('keydown',(event)=>{
+  if(event.key == 'Enter'){
+    let patient_id = document.querySelector('.search-bar').value;
+    fetch('http://localhost:5000/getIndividualBillData/' + patient_id)
+  .then(response=>response.json())
+  .then(data=>{
+    if(data['data']){
+      const {bill_no,patient_id,operation_charges,lab_charges,medicine_charges,room_charges,total_bill,payment_status} = data['data']
+      billingList.innerHTML = 
+  `
+    <thead>
+    <th>Bill No.</th>
+    <th>Patient ID</th>
+    <th>Room Charges</th>
+    <th>Operation Charges</th>
+    <th>Lab Charges</th>
+    <th>Medicine Charges</th>
+    <th>Total Bill</th>
+    <th>Status</th>
+    </thead>
+
+    <tr>
+      <td>${bill_no}</td>
+      <td>${patient_id}</td>
+      <td>&#8377 ${room_charges}</td>
+      <td>&#8377 ${operation_charges}</td>
+      <td>&#8377 ${lab_charges}</td>
+      <td>&#8377 ${medicine_charges}</td>
+      <td>&#8377 ${total_bill}</td>
+      <td>${payment_status}</td>
+    </tr>
+  `
+    }
+    else{
+      billingList.innerHTML = "No result found";
+    }
+  })
+  }
+})
+
 
 
 
@@ -199,7 +239,7 @@ function displayBillingFirstSection(){
   document.querySelector('.billing-first-sec').innerHTML = `
   <h1>BILLING</h1>
     <div class="dept-sub-container">
-      <input class="search-bar" type="text" placeholder="Search">
+      <input class="search-bar" type="text" class="search-bar" placeholder="Search Patient ID">
       <div>
         <button class="add-bill" onclick="toggleAddBillOverlay()">Add Bill</button>
         <button class="edit-bill">Edit Bill</button>

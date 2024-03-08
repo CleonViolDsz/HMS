@@ -101,7 +101,7 @@ function displayPatientFirstSection(patient_sec){
   document.querySelector('.patient-first-sec').innerHTML = `
   <h1>${patient_sec}</h1>
     <div class="dept-sub-container">
-      <input class="search-bar" type="text" placeholder="Search">
+      <input class="search-bar" type="text" class="search-bar" placeholder="Search Patient ID">
       <div>
         <button class="add-patient">Add Patient</button>
         <button class="edit-patient">Edit Patient</button>
